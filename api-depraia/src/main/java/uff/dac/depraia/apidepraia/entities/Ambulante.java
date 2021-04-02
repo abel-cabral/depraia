@@ -1,5 +1,6 @@
 package uff.dac.depraia.apidepraia.entities;
 
+import uff.dac.depraia.apidepraia.model.Produto;
 import uff.dac.depraia.apidepraia.model.User;
 import java.util.ArrayList;
 import java.util.List;
