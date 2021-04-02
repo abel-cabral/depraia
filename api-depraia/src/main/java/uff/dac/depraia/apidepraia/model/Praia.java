@@ -1,17 +1,31 @@
 package uff.dac.depraia.apidepraia.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import uff.dac.depraia.apidepraia.model.Endereco;
+import javax.persistence.Entity;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 
+@Entity
+@Getter
+@Setter
 public class Praia {
-    private Long id;
+     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private int capacidade;
     private String nome;
     private Endereco endereco;
+    
+    public Praia () {}
+    
+    public Praia(Integer capacidade, Endereco endereco) {
+        this.capacidade = capacidade;
+        this.endereco = endereco;
+    }   
 }
