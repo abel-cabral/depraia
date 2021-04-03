@@ -10,7 +10,6 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 @Entity
-
 public class Banhista implements Serializable {
     
     @Id
