@@ -12,7 +12,10 @@
     <artifactId>api-depraia</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>api-depraia</name>
-    <description>An API to DAC discipline</description>   
+    <description>An API to DAC discipline</description>
+    <properties>
+        <java.version>11</java.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -89,7 +92,7 @@
                         </exclude>
                     </excludes>
                 </configuration>
-            </plugin>
+            </plugin>            
             <!-- Heroku Maven Plugin Configuration -->
             <plugin>
                 <groupId>com.heroku.sdk</groupId>
