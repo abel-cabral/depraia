@@ -45,10 +45,10 @@ public class AmbulanteController {
         //  n.get().getProdutos().add(newProduto);
         // repo.save(n);
         // return "Saved";
-        Produto p = new Produto("MH", "sdfsdfsdf", 2.0);
+        
         return repo.findById(id)
                 .map(n -> {
-                    n.getProdutos().add(p);
+                    n.getProdutos().add(newProduto);
                     return repo.save(n);
                 });
     }
