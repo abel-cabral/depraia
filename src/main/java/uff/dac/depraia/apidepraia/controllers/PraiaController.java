@@ -16,25 +16,49 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import uff.dac.depraia.apidepraia.dto.BanhistaDTO;
 import uff.dac.depraia.apidepraia.model.Praia;
+import uff.dac.depraia.apidepraia.repositories.BanhistaRepository;
 import uff.dac.depraia.apidepraia.repositories.PraiaRepository;
 
 @Controller
 @RequestMapping("/praia")
 public class PraiaController {
-    
+
     @Autowired
     private PraiaRepository praiaRepo;
+    @Autowired
+    private BanhistaRepository banhistaRepo;
 
-    @PostMapping(path = "", consumes = {MediaType.APPLICATION_JSON_VALUE})    
+    @PostMapping(path = "", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
     String addNew(@Valid @RequestBody Praia praia) {
         try {
             praiaRepo.save(praia);
             return "Saved";
-        } catch (ConstraintViolationException e) {            
+        } catch (ConstraintViolationException e) {
             return e.getMessage();
-        }        
+        }
+    }
+
+    @PostMapping(path = "adicionar/banhista/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public @ResponseBody
+    String addBanhista(@Valid @RequestBody BanhistaDTO banhista, @PathVariable Integer id) {
+        try {
+            if (!banhistaRepo.findByCPF(banhista.getUser().getCpf()).equals("")) {
+                return praiaRepo.findById(id).map(n -> {
+                    n.addBanhista(banhista.conversor());
+                    praiaRepo.save(n);
+                    return "Banhista adicionado a praia " + n.getNome();
+                })
+                        .orElseGet(() -> {
+                            return "Praia não cadastrada";
+                        });
+            }
+        } catch (NullPointerException e) {
+            return "Banhista não cadastrado";
+        }
+        return null;
     }
 
     @GetMapping(path = "/todos")
@@ -54,18 +78,18 @@ public class PraiaController {
     Praia updateById(@RequestBody Praia newPraia, @PathVariable int id) {
         try {
             return praiaRepo.findById(id)
-                .map(n -> {
-                    n.setNome(newPraia.getNome());
-                    n.setCapacidade(newPraia.getCapacidade());
-                    n.getEndereco().setBairro(newPraia.getEndereco().getBairro());
-                    n.getEndereco().setRua(newPraia.getEndereco().getRua());
-                    n.getEndereco().setCidade(newPraia.getEndereco().getCidade());
-                    n.getEndereco().setCep(newPraia.getEndereco().getCep());
-                    return praiaRepo.save(n);
-                })
-                .orElseGet(() -> {
-                    return praiaRepo.save(newPraia);
-                });
+                    .map(n -> {
+                        n.setNome(newPraia.getNome());
+                        n.setCapacidade(newPraia.getCapacidade());
+                        n.getEndereco().setBairro(newPraia.getEndereco().getBairro());
+                        n.getEndereco().setRua(newPraia.getEndereco().getRua());
+                        n.getEndereco().setCidade(newPraia.getEndereco().getCidade());
+                        n.getEndereco().setCep(newPraia.getEndereco().getCep());
+                        return praiaRepo.save(n);
+                    })
+                    .orElseGet(() -> {
+                        return praiaRepo.save(newPraia);
+                    });
         } catch (Exception e) {
             return praiaRepo.save(newPraia);
         }
