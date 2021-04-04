@@ -7,8 +7,11 @@ import uff.dac.depraia.apidepraia.model.Banhista;
 public class BanhistaDTO {
     private Integer tipoUsuario;    
     private UserDTO user;
-    
+
+    public BanhistaDTO() {
+    }
+            
     public Banhista conversor() {
-        return new Banhista(tipoUsuario, user.conversor());
+        return new Banhista(tipoUsuario, user.conversor_com_cpf());
     }
 }

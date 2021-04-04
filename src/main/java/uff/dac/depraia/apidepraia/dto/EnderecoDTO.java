@@ -10,7 +10,17 @@ public class EnderecoDTO {
     private String bairro;
     private String cep;
     private String cidade;
-    
+
+    public EnderecoDTO(Endereco endereco) {
+        this.rua = endereco.getRua();
+        this.bairro = endereco.getBairro();
+        this.cep = endereco.getCep();
+        this.cidade = endereco.getCidade();
+    }
+
+    public EnderecoDTO() {
+    }
+            
     public Endereco conversor() {
         return new Endereco(rua, bairro, cep, cidade);
     }

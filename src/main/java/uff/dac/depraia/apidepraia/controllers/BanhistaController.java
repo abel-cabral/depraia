@@ -57,8 +57,7 @@ public class BanhistaController {
     Banhista updateById(@RequestBody BanhistaDTO newBanhista, @PathVariable int id) {
         return banhistaRepo.findById(id)
                 .map(n -> {
-                    n.setTipoUsuario(newBanhista.getTipoUsuario());
-                    n.getUser().setCpf(newBanhista.getUser().getCpf());
+                    n.setTipoUsuario(newBanhista.getTipoUsuario());                  
                     n.getUser().setEmail(newBanhista.getUser().getEmail());
                     n.getUser().setNome(newBanhista.getUser().getNome());
                     n.getUser().getEndereco().setRua(newBanhista.getUser().getEndereco().getRua());

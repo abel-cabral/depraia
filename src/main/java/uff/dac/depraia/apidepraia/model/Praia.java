@@ -38,7 +38,7 @@ public class Praia {
     private Set<String> esportistas;
     @ElementCollection
     private Set<String> ambulantes;
-    
+
     public Praia() {
     }
 
@@ -47,28 +47,95 @@ public class Praia {
         this.nome = nome;
         this.endereco = endereco;
     }
-    
+
     public Boolean addBanhista(String cpf) {
-        return banhistas.add(cpf);
+        if (getCapacidade() >= 1) {
+            setCapacidade(getCapacidade() - 1);
+            return banhistas.add(cpf);
+        }
+        return false;
     }
-    
+
     public Boolean addEsportista(String cpf) {
-        return esportistas.add(cpf);
+        if (getCapacidade() >= 1) {
+            setCapacidade(getCapacidade() - 1);
+            return esportistas.add(cpf);
+        }
+        return false;
     }
-    
+
     public Boolean addAmbulante(String cpf) {
-        return ambulantes.add(cpf);
+        if (getCapacidade() >= 1) {
+            setCapacidade(getCapacidade() - 1);
+            return ambulantes.add(cpf);
+        }
+        return false;
     }
-    
+
     public Boolean delBanhista(String cpf) {
-        return banhistas.remove(cpf);
+        if (getCapacidade() < 1000) {
+            setCapacidade(getCapacidade() + 1);
+            return banhistas.remove(cpf);
+        }
+        return false;
     }
-    
+
     public Boolean delEsportista(String cpf) {
-        return esportistas.remove(cpf);
+        if (getCapacidade() < 1000) {
+            setCapacidade(getCapacidade() + 1);
+            return esportistas.remove(cpf);
+        }
+        return false;
+    }
+
+    public Boolean delAmbulante(String cpf) {
+        if (getCapacidade() < 1000) {
+            setCapacidade(getCapacidade() + 1);
+            return ambulantes.remove(cpf);
+        }
+        return false;
+    }
+
+    public Boolean buscarCPF(Set<String> set, String cpf) {
+        for(String s : set) {
+            if (s.equals(cpf)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Set<Quiosque> getQuiosques() {
+        return quiosques;
+    }
+
+    public void setQuiosques(Set<Quiosque> quiosques) {
+        this.quiosques = quiosques;
+    }
+
+    public Set<String> getBanhistas() {
+        return banhistas;
+    }
+
+    public void setBanhistas(Set<String> banhistas) {
+        this.banhistas = banhistas;
+    }
+
+    public Set<String> getEsportistas() {
+        return esportistas;
+    }
+
+    public void setEsportistas(Set<String> esportistas) {
+        this.esportistas = esportistas;
+    }
+
+    public Set<String> getAmbulantes() {
+        return ambulantes;
+    }
+
+    public void setAmbulantes(Set<String> ambulantes) {
+        this.ambulantes = ambulantes;
     }
     
-    public Boolean delAmbulante(String cpf) {
-        return ambulantes.remove(cpf);
-    }
+    
 }

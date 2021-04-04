@@ -10,8 +10,15 @@ public class UserDTO {
     private EnderecoDTO endereco;    
     private String email;    
     private Boolean admin;
-    
+
+    public UserDTO() {
+    }
+            
     public User conversor() {
         return new User(nome, endereco.conversor(), email, admin);
+    }
+    
+    public User conversor_com_cpf() {
+        return new User(nome, cpf, endereco.conversor(), email, admin);
     }
 }
