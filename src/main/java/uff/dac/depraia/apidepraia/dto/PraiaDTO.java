@@ -4,7 +4,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.OneToOne;
 import lombok.Getter;
 import uff.dac.depraia.apidepraia.model.Praia;
-import uff.dac.depraia.apidepraia.model.User;
 
 @Getter
 public class PraiaDTO {

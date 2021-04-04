@@ -28,7 +28,7 @@ public class User implements Serializable{
     
     public User() {}
     
-    public User(String nome, String cpf, Endereco endereco, String email, Boolean admin) {
+    public User(String nome, Endereco endereco, String email, Boolean admin) {
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;

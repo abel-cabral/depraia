@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uff.dac.depraia.apidepraia.dto.BanhistaDTO;
+import uff.dac.depraia.apidepraia.dto.UserDTO;
 import uff.dac.depraia.apidepraia.model.Praia;
 import uff.dac.depraia.apidepraia.repositories.BanhistaRepository;
 import uff.dac.depraia.apidepraia.repositories.PraiaRepository;
@@ -43,13 +44,34 @@ public class PraiaController {
 
     @PostMapping(path = "adicionar/banhista/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
-    String addBanhista(@Valid @RequestBody BanhistaDTO banhista, @PathVariable Integer id) {
+    String addBanhista(@Valid @RequestBody UserDTO user, @PathVariable Integer id) {
         try {
-            if (!banhistaRepo.findByCPF(banhista.getUser().getCpf()).equals("")) {
+            if (!banhistaRepo.findByCPF(user.getCpf()).equals("")) {
                 return praiaRepo.findById(id).map(n -> {
-                    n.addBanhista(banhista.conversor());
+                    n.addBanhista(user.getCpf());
                     praiaRepo.save(n);
                     return "Banhista adicionado a praia " + n.getNome();
+                })
+                        .orElseGet(() -> {
+                            return "Praia não cadastrada";
+                        });
+            }
+        } catch (NullPointerException e) {
+            return "Banhista não cadastrado";
+        }
+        return null;
+    }
+    
+    @DeleteMapping(path = "remover/banhista/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public @ResponseBody
+    String delBanhista(@Valid @RequestBody UserDTO user, @PathVariable Integer id) {
+        System.out.println(user.getCpf());
+        try {
+            if (!banhistaRepo.findByCPF(user.getCpf()).equals("")) {
+                return praiaRepo.findById(id).map(n -> {
+                    n.delBanhista(user.getCpf());
+                    praiaRepo.save(n);
+                    return "Banhista removido da praia " + n.getNome();
                 })
                         .orElseGet(() -> {
                             return "Praia não cadastrada";

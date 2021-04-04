@@ -12,6 +12,6 @@ public class UserDTO {
     private Boolean admin;
     
     public User conversor() {
-        return new User(nome, cpf, endereco.conversor(), email, admin);
+        return new User(nome, endereco.conversor(), email, admin);
     }
 }

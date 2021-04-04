@@ -48,15 +48,27 @@ public class Praia {
         this.endereco = endereco;
     }
     
-    public Boolean addBanhista(Banhista n) {
-        return banhistas.add(n.getUser().getCpf());
+    public Boolean addBanhista(String cpf) {
+        return banhistas.add(cpf);
     }
     
-    public Boolean addEsportista(Esportista n) {
-        return esportistas.add(n.getUser().getCpf());
+    public Boolean addEsportista(String cpf) {
+        return esportistas.add(cpf);
     }
     
-    public Boolean addAmbulante(Ambulante n) {
-        return ambulantes.add(n.getUser().getCpf());
+    public Boolean addAmbulante(String cpf) {
+        return ambulantes.add(cpf);
+    }
+    
+    public Boolean delBanhista(String cpf) {
+        return banhistas.remove(cpf);
+    }
+    
+    public Boolean delEsportista(String cpf) {
+        return esportistas.remove(cpf);
+    }
+    
+    public Boolean delAmbulante(String cpf) {
+        return ambulantes.remove(cpf);
     }
 }
