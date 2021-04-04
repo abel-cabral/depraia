@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import uff.dac.depraia.apidepraia.dto.BanhistaDTO;
 import uff.dac.depraia.apidepraia.model.Banhista;
 import uff.dac.depraia.apidepraia.repositories.BanhistaRepository;
 
@@ -28,15 +29,15 @@ public class BanhistaController {
     @Autowired
     private BanhistaRepository banhistaRepo;
 
-    @PostMapping(path = "", consumes = {MediaType.APPLICATION_JSON_VALUE})    
+    @PostMapping(path = "", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
-    String addNew(@Valid @RequestBody Banhista banhista) {
+    String addNew(@Valid @RequestBody BanhistaDTO banhista) {
         try {
-            banhistaRepo.save(banhista);
+            banhistaRepo.save(banhista.conversor());
             return "Saved";
-        } catch (ConstraintViolationException e) {            
+        } catch (ConstraintViolationException e) {
             return e.getMessage();
-        }        
+        }
     }
 
     @GetMapping(path = "/todos")
@@ -53,9 +54,8 @@ public class BanhistaController {
 
     @PutMapping("/{id}")
     public @ResponseBody
-    Banhista updateById(@RequestBody Banhista newBanhista, @PathVariable int id) {
-        try {
-            return banhistaRepo.findById(id)
+    Banhista updateById(@RequestBody BanhistaDTO newBanhista, @PathVariable int id) {
+        return banhistaRepo.findById(id)
                 .map(n -> {
                     n.setTipoUsuario(newBanhista.getTipoUsuario());
                     n.getUser().setCpf(newBanhista.getUser().getCpf());
@@ -68,12 +68,8 @@ public class BanhistaController {
                     return banhistaRepo.save(n);
                 })
                 .orElseGet(() -> {
-                    return banhistaRepo.save(newBanhista);
+                    return banhistaRepo.save(newBanhista.conversor());
                 });
-        } catch (Exception e) {
-            return banhistaRepo.save(newBanhista);
-        }
-        
     }
 
     @DeleteMapping(value = "/{id}")

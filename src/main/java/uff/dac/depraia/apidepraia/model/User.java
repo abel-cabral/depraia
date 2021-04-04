@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 
@@ -19,7 +20,7 @@ public class User implements Serializable{
     private String nome;
     //@NotBlank(message = "O campo cpf' é obrigatório")
     private String cpf;
-    @OneToOne(cascade=CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Endereco endereco;
     //@NotBlank(message = "O campo 'email' é obrigatório")
     private String email;    
