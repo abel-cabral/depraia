@@ -20,6 +20,7 @@ import uff.dac.depraia.apidepraia.dto.UserDTO;
 import uff.dac.depraia.apidepraia.model.Praia;
 import uff.dac.depraia.apidepraia.repositories.BanhistaRepository;
 import uff.dac.depraia.apidepraia.repositories.PraiaRepository;
+import uff.dac.depraia.apidepraia.repositories.EsportistaRepository;
 
 @Controller
 @RequestMapping("/praia")
@@ -29,6 +30,8 @@ public class PraiaController {
     private PraiaRepository praiaRepo;
     @Autowired
     private BanhistaRepository banhistaRepo;
+    @Autowired
+    private EsportistaRepository esportistaRepo;
 
     @PostMapping(path = "", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
@@ -57,7 +60,7 @@ public class PraiaController {
                             praiaRepo.save(n);
                             return "Banhista adicionado a praia " + n.getNome();
                         } else {
-                            return "Praia com capacidade máxima atingida ou banhista já cadastrado";
+                            return "Praia com capacidade máxima atingida";
                         }
                     } else {
                         return "Banhista já está cadastrado";
@@ -86,6 +89,59 @@ public class PraiaController {
                 return "Banhista removido da praia " + n.getNome();
             } else {
                 return "Banhista não está vinculado a praia " + n.getNome();
+            }
+        })
+                .orElseGet(() -> {
+                    return "Praia não cadastrada";
+                });
+    }
+    
+    // ESPORTISTA
+    @PostMapping(path = "adicionar/esportista/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public @ResponseBody
+    String addEsportista(@Valid @RequestBody UserDTO user, @PathVariable Integer id) {
+        try {
+            // Busca se o Banhista tem cadastro
+            if (!esportistaRepo.findByCPF(user.getCpf()).equals("")) {
+                // Busca se o id da praia é valido                                
+                return praiaRepo.findById(id).map(n -> {
+                    // Verifica se o CPF já tá vinculado naquela praia
+                    if (!n.buscarCPF(n.getEsportistas(), user.getCpf())) {
+                        // Verifica se a praia tem vaga
+                        Boolean temVaga = n.addEsportista(user.getCpf());
+                        if (temVaga) {
+                            praiaRepo.save(n);
+                            return "Esportista adicionado a praia " + n.getNome();
+                        } else {
+                            return "Praia com capacidade máxima atingida";
+                        }
+                    } else {
+                        return "Esportista já está cadastrado";
+                    }
+
+                })
+                        .orElseGet(() -> {
+                            return "Praia não cadastrada";
+                        });
+            }
+        } catch (NullPointerException e) {
+            return "Esportista não cadastrado";
+        }
+        return null;
+    }
+
+    @DeleteMapping(path = "remover/esportista/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public @ResponseBody
+    String delEsportista(@Valid @RequestBody UserDTO user, @PathVariable Integer id) {
+        // Busca se o id da praia é valido
+        return praiaRepo.findById(id).map(n -> {
+            // Verifica se o CPF já tá vinculado naquela praia
+            if (n.buscarCPF(n.getEsportistas(), user.getCpf())) {
+                n.delEsportista(user.getCpf());
+                praiaRepo.save(n);
+                return "Esportista removido da praia " + n.getNome();
+            } else {
+                return "Esportista não está vinculado a praia " + n.getNome();
             }
         })
                 .orElseGet(() -> {

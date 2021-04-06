@@ -73,27 +73,18 @@ public class Praia {
     }
 
     public Boolean delBanhista(String cpf) {
-        if (getCapacidade() < 1000) {
-            setCapacidade(getCapacidade() + 1);
-            return banhistas.remove(cpf);
-        }
-        return false;
+        setCapacidade(getCapacidade() + 1);
+        return banhistas.remove(cpf);        
     }
 
     public Boolean delEsportista(String cpf) {
-        if (getCapacidade() < 1000) {
-            setCapacidade(getCapacidade() + 1);
+        setCapacidade(getCapacidade() + 1);
             return esportistas.remove(cpf);
-        }
-        return false;
     }
 
     public Boolean delAmbulante(String cpf) {
-        if (getCapacidade() < 1000) {
-            setCapacidade(getCapacidade() + 1);
-            return ambulantes.remove(cpf);
-        }
-        return false;
+        setCapacidade(getCapacidade() + 1);
+        return ambulantes.remove(cpf);
     }
 
     public Boolean buscarCPF(Set<String> set, String cpf) {
