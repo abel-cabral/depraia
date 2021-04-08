@@ -1,6 +1,7 @@
 package uff.dac.depraia.apidepraia.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.CascadeType;
@@ -10,8 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
@@ -25,13 +24,15 @@ public class Praia {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private int capacidade;
+    private Integer capacidade;
     private String nome;
     @OneToOne(cascade = CascadeType.PERSIST)
     private Endereco endereco;
+    @JsonManagedReference
     @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+            cascade = {CascadeType.ALL})
     private Set<Quiosque> quiosques;
+    
     @ElementCollection
     private Set<String> banhistas;
     @ElementCollection

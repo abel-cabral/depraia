@@ -43,7 +43,8 @@ public class PraiaController {
             return e.getMessage();
         }
     }
-
+    
+    // ------------------------------------- BANHISTA -------------------------------------------//
     @PostMapping(path = "adicionar/banhista/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
     String addBanhista(@Valid @RequestBody UserDTO user, @PathVariable Integer id) {
@@ -96,7 +97,7 @@ public class PraiaController {
                 });
     }
     
-    // ESPORTISTA
+    // ------------------------------------- ESPORTISTA -----------------------------------------//
     @PostMapping(path = "adicionar/esportista/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public @ResponseBody
     String addEsportista(@Valid @RequestBody UserDTO user, @PathVariable Integer id) {
@@ -148,7 +149,8 @@ public class PraiaController {
                     return "Praia não cadastrada";
                 });
     }
-
+    
+    // ------------------------------------- QUIÓSQUE -------------------------------------------//
     @GetMapping(path = "/todos")
     public @ResponseBody
     Iterable<Praia> getAll() {

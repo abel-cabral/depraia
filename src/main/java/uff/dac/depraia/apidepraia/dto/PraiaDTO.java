@@ -1,7 +1,5 @@
 package uff.dac.depraia.apidepraia.dto;
 
-import javax.persistence.CascadeType;
-import javax.persistence.OneToOne;
 import lombok.Getter;
 import uff.dac.depraia.apidepraia.model.Praia;
 

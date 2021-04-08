@@ -1,12 +1,9 @@
 package uff.dac.depraia.apidepraia.controllers;
 
+import java.util.Map;
 import java.util.Optional;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,25 +13,35 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import uff.dac.depraia.apidepraia.dto.QuiosqueDTO;
 import uff.dac.depraia.apidepraia.model.Quiosque;
 import uff.dac.depraia.apidepraia.repositories.QuiosqueRepository;
+import uff.dac.depraia.apidepraia.repositories.PraiaRepository;
+import uff.dac.depraia.apidepraia.util.Mensagem;
 
 @Controller
 @RequestMapping("/quiosque")
 public class QuiosqueController {
-    
+
     @Autowired
     private QuiosqueRepository quiosqueRepo;
+    @Autowired
+    private PraiaRepository praiaRepo;
 
-    @PostMapping(path = "", consumes = {MediaType.APPLICATION_JSON_VALUE})    
+    @PostMapping(path = "")
     public @ResponseBody
-    String addNew(@Valid @RequestBody Quiosque quiosque) {
-        try {
-            quiosqueRepo.save(quiosque);
-            return "Saved";
-        } catch (ConstraintViolationException e) {            
-            return e.getMessage();
-        }        
+    Map<String, Boolean> addEntity(@Valid @RequestBody QuiosqueDTO quiosque) {
+        // Busca a praia pelo ID
+        return praiaRepo.findById(quiosque.getPraia().getId())
+                .map(n -> {
+                    Quiosque q = quiosque.conversor();
+                    q.setPraia(n);
+                    quiosqueRepo.save(q);
+                    return Mensagem.sucesso(quiosque.conversor().getClass().getSimpleName(), 1);
+                })
+                .orElseGet(() -> {
+                    return Mensagem.error("Praia", 4);
+                });
     }
 
     @GetMapping(path = "/todos")
@@ -51,35 +58,34 @@ public class QuiosqueController {
 
     @PutMapping("/{id}")
     public @ResponseBody
-    Quiosque updateById(@RequestBody Quiosque newQuiosque, @PathVariable int id) {
-        try {
+    Map<String, Boolean> updateById(@Valid @RequestBody QuiosqueDTO quiosque, @PathVariable int id) {
+        // Busca se o id da praia é valido                                
+        return praiaRepo.findById(quiosque.getPraia().getId()).map(n -> {
+            // Busca o quiosque no banco de dados
             return quiosqueRepo.findById(id)
-                .map(n -> {
-                    n.setNome(newQuiosque.getNome());
-                    n.getPraia().setCapacidade(newQuiosque.getPraia().getCapacidade());
-                    n.getPraia().setNome(newQuiosque.getPraia().getNome());
-                    n.getPraia().getEndereco().setRua(newQuiosque.getPraia().getEndereco().getRua());
-                    n.getPraia().getEndereco().setBairro(newQuiosque.getPraia().getEndereco().getBairro());
-                    n.getPraia().getEndereco().setCidade(newQuiosque.getPraia().getEndereco().getCidade());
-                    n.getPraia().getEndereco().setCep(newQuiosque.getPraia().getEndereco().getCep());
-                    return quiosqueRepo.save(n);
-                })
+                    .map(m -> {
+                        m.setNome(quiosque.getNome());
+                        m.setPraia(n);
+                        quiosqueRepo.save(m);
+                        return Mensagem.sucesso(quiosque.conversor().getClass().getSimpleName(), 2);
+                    })
+                    .orElseGet(() -> {
+                        return Mensagem.error("Quiosque", 4);
+                    });
+        })
                 .orElseGet(() -> {
-                    return quiosqueRepo.save(newQuiosque);
+                    return Mensagem.error("Praia", 4);
                 });
-        } catch (Exception e) {
-            return quiosqueRepo.save(newQuiosque);
-        }
-        
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Integer> deleteById(@PathVariable Integer id) {
+    @DeleteMapping("/{id}")
+    public @ResponseBody
+    Map<String, Boolean> deleteById(@PathVariable int id) {
         try {
             quiosqueRepo.deleteById(id);
-            return new ResponseEntity<>(id, HttpStatus.OK);
+            return Mensagem.sucesso("Quiosque", 3);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return Mensagem.error("Quiosque", 3);
         }
     }
 }
