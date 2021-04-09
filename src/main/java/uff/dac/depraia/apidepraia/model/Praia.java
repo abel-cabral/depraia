@@ -1,9 +1,8 @@
 package uff.dac.depraia.apidepraia.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.Entity;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -19,24 +18,30 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Praia {
+public class Praia implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private Integer capacidade;
     private String nome;
+
     @OneToOne(cascade = CascadeType.PERSIST)
     private Endereco endereco;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
             cascade = {CascadeType.ALL})
     private Set<Quiosque> quiosques;
-    
+
     @ElementCollection
     private Set<String> banhistas;
-    @ElementCollection
-    private Set<String> esportistas;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL})
+    private Set<Esportista> esportistas;
+
     @ElementCollection
     private Set<String> ambulantes;
 
@@ -49,85 +54,23 @@ public class Praia {
         this.endereco = endereco;
     }
 
-    public Boolean addBanhista(String cpf) {
-        if (getCapacidade() >= 1) {
-            setCapacidade(getCapacidade() - 1);
-            return banhistas.add(cpf);
+    public Praia(Integer capacidade, Integer id, String nome, Endereco endereco) {
+        this.id = id;
+        this.capacidade = capacidade;
+        this.nome = nome;
+        this.endereco = endereco;
+    }
+
+    public void adicionarPessoa() throws Exception {
+        if (getCapacidade() > 0) {
+            capacidade = capacidade - 1;
+        } else {
+            throw new Exception("Praia com capacidade máxima atingida");
         }
-        return false;
+
     }
 
-    public Boolean addEsportista(String cpf) {
-        if (getCapacidade() >= 1) {
-            setCapacidade(getCapacidade() - 1);
-            return esportistas.add(cpf);
-        }
-        return false;
+    public void removerPessoa() {
+        capacidade = capacidade + 1;        
     }
-
-    public Boolean addAmbulante(String cpf) {
-        if (getCapacidade() >= 1) {
-            setCapacidade(getCapacidade() - 1);
-            return ambulantes.add(cpf);
-        }
-        return false;
-    }
-
-    public Boolean delBanhista(String cpf) {
-        setCapacidade(getCapacidade() + 1);
-        return banhistas.remove(cpf);        
-    }
-
-    public Boolean delEsportista(String cpf) {
-        setCapacidade(getCapacidade() + 1);
-            return esportistas.remove(cpf);
-    }
-
-    public Boolean delAmbulante(String cpf) {
-        setCapacidade(getCapacidade() + 1);
-        return ambulantes.remove(cpf);
-    }
-
-    public Boolean buscarCPF(Set<String> set, String cpf) {
-        for(String s : set) {
-            if (s.equals(cpf)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public Set<Quiosque> getQuiosques() {
-        return quiosques;
-    }
-
-    public void setQuiosques(Set<Quiosque> quiosques) {
-        this.quiosques = quiosques;
-    }
-
-    public Set<String> getBanhistas() {
-        return banhistas;
-    }
-
-    public void setBanhistas(Set<String> banhistas) {
-        this.banhistas = banhistas;
-    }
-
-    public Set<String> getEsportistas() {
-        return esportistas;
-    }
-
-    public void setEsportistas(Set<String> esportistas) {
-        this.esportistas = esportistas;
-    }
-
-    public Set<String> getAmbulantes() {
-        return ambulantes;
-    }
-
-    public void setAmbulantes(Set<String> ambulantes) {
-        this.ambulantes = ambulantes;
-    }
-    
-    
 }

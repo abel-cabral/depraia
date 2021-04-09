@@ -1,5 +1,6 @@
 package uff.dac.depraia.apidepraia.model;
 
+import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -18,7 +19,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "ambulante")
-public class Ambulante {
+public class Ambulante implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

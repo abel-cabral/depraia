@@ -30,14 +30,14 @@ public class QuiosqueController {
 
     @PostMapping(path = "")
     public @ResponseBody
-    Map<String, Boolean> addEntity(@Valid @RequestBody QuiosqueDTO quiosque) {
+    Map<String, Boolean> addEntity(@Valid @RequestBody QuiosqueDTO entity) {
         // Busca a praia pelo ID
-        return praiaRepo.findById(quiosque.getPraia().getId())
+        return praiaRepo.findById(entity.getPraia().getId())
                 .map(n -> {
-                    Quiosque q = quiosque.conversor();
-                    q.setPraia(n);
-                    quiosqueRepo.save(q);
-                    return Mensagem.sucesso(quiosque.conversor().getClass().getSimpleName(), 1);
+                    Quiosque aux = entity.conversor();
+                    aux.setPraia(n);
+                    quiosqueRepo.save(aux);
+                    return Mensagem.sucesso(entity.conversor().getClass().getSimpleName(), 1);
                 })
                 .orElseGet(() -> {
                     return Mensagem.error("Praia", 4);
@@ -58,16 +58,16 @@ public class QuiosqueController {
 
     @PutMapping("/{id}")
     public @ResponseBody
-    Map<String, Boolean> updateById(@Valid @RequestBody QuiosqueDTO quiosque, @PathVariable int id) {
+    Map<String, Boolean> updateById(@Valid @RequestBody QuiosqueDTO entity, @PathVariable int id) {
         // Busca se o id da praia é valido                                
-        return praiaRepo.findById(quiosque.getPraia().getId()).map(n -> {
+        return praiaRepo.findById(entity.getPraia().getId()).map(n -> {
             // Busca o quiosque no banco de dados
             return quiosqueRepo.findById(id)
                     .map(m -> {
-                        m.setNome(quiosque.getNome());
+                        m.setNome(entity.getNome());
                         m.setPraia(n);
                         quiosqueRepo.save(m);
-                        return Mensagem.sucesso(quiosque.conversor().getClass().getSimpleName(), 2);
+                        return Mensagem.sucesso(entity.conversor().getClass().getSimpleName(), 2);
                     })
                     .orElseGet(() -> {
                         return Mensagem.error("Quiosque", 4);

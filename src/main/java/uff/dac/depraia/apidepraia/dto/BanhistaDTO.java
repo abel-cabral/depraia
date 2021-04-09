@@ -12,6 +12,6 @@ public class BanhistaDTO {
     }
             
     public Banhista conversor() {
-        return new Banhista(tipoUsuario, user.conversor_com_cpf());
+        return new Banhista(tipoUsuario, user.conversor());
     }
 }

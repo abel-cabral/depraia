@@ -1,6 +1,7 @@
 package uff.dac.depraia.apidepraia.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "produto")
-public class Produto {
+public class Produto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;

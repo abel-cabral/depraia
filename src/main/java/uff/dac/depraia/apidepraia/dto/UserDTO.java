@@ -13,12 +13,16 @@ public class UserDTO {
 
     public UserDTO() {
     }
+
+    public UserDTO(User user) {
+        this.nome = user.getNome();
+        this.cpf = user.getCpf();
+        this.endereco = new EnderecoDTO(user.getEndereco());
+        this.email = user.getEmail();
+        this.admin = user.getAdmin();
+    }
             
     public User conversor() {
-        return new User(nome, endereco.conversor(), email, admin);
-    }
-    
-    public User conversor_com_cpf() {
         return new User(nome, cpf, endereco.conversor(), email, admin);
     }
 }

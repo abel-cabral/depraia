@@ -5,13 +5,11 @@ import uff.dac.depraia.apidepraia.model.Praia;
 
 @Getter
 public class PraiaDTO {
-    private Integer id;
     private Integer capacidade;
     private String nome;    
     private EnderecoDTO endereco;
 
     public PraiaDTO(Praia p) {
-        this.id = p.getId();
         this.capacidade = p.getCapacidade();
         this.nome = p.getNome();
         this.endereco = new EnderecoDTO(p.getEndereco());
@@ -24,3 +22,5 @@ public class PraiaDTO {
         return new Praia(capacidade, nome, endereco.conversor());
     }
 }
+
+

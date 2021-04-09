@@ -37,8 +37,11 @@ public class Mensagem {
                 aux = "deletado do";
                 break;
             case 4:
-                response.put("Error! " + name + "não foi encontrado", Boolean.FALSE);
-                return response;                
+                response.put("Error! " + name + " não foi encontrado", Boolean.FALSE);
+                return response;
+            default:
+                response.put("Error! " + name, Boolean.FALSE);
+                return response;
         }
         response.put("Error! " + name + " não foi " + aux + " banco de dados", Boolean.FALSE);
         return response;
