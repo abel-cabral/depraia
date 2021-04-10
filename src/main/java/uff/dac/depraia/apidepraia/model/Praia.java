@@ -27,17 +27,22 @@ public class Praia implements Serializable {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Endereco endereco;
-    
+
     @JsonManagedReference
     @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
             cascade = {CascadeType.ALL})
     private Set<Agenda> agendas;
-    
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL})
+    private Set<Ambulante> ambulantes;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
             cascade = {CascadeType.ALL})
     private Set<Quiosque> quiosques;
-    
+
     public Praia() {
     }
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import uff.dac.depraia.apidepraia.dto.ProdutoDTO;
 import uff.dac.depraia.apidepraia.model.Produto;
 import uff.dac.depraia.apidepraia.repositories.ProdutoRepository;
 
@@ -25,11 +26,12 @@ public class ProdutoController {
     @Autowired
     private ProdutoRepository repo;
     
-    @PostMapping(path = "", consumes = {MediaType.APPLICATION_JSON_VALUE})    
+    @PostMapping(path = "")    
     public @ResponseBody
-    String addNew(@Valid @RequestBody Produto produto) {
+    String addNew(@Valid @RequestBody ProdutoDTO produto) {
         try {
-            repo.save(produto);
+            Produto aux = produto.conversor();
+            repo.save(aux);
             return "Saved";
         } catch (ConstraintViolationException e) {            
             return e.getMessage();
