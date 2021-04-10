@@ -21,7 +21,7 @@ public class Esportista implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    //@NotNull(message = "O campo 'tipoUsuario' é obrigatório")
+    
     private Integer tipoUsuario;
     
     @OneToOne(cascade=CascadeType.PERSIST)
@@ -29,14 +29,14 @@ public class Esportista implements Serializable{
     
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "praia_id", nullable = false)
-    private Praia praia;
-
-    public Esportista(Integer tipoUsuario, Praia praia, User user) {
-        this.tipoUsuario = tipoUsuario;
-        this.user = user;
-        this.praia = praia;
-    }
+    @JoinColumn(name = "agenda_id", nullable = false)
+    private Agenda agenda;
     
     public Esportista() {}
+
+    public Esportista(Integer tipoUsuario, User user, Agenda agenda) {
+        this.tipoUsuario = tipoUsuario;
+        this.user = user;
+        this.agenda = agenda;
+    }
 }

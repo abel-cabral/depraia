@@ -1,5 +1,7 @@
 package uff.dac.depraia.apidepraia.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.Set;
@@ -28,23 +30,17 @@ public class Praia implements Serializable {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Endereco endereco;
+    
+    @JsonManagedReference
+    @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL})
+    private Set<Agenda> agendas;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
             cascade = {CascadeType.ALL})
     private Set<Quiosque> quiosques;
-
-    @ElementCollection
-    private Set<String> banhistas;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL})
-    private Set<Esportista> esportistas;
-
-    @ElementCollection
-    private Set<String> ambulantes;
-
+    
     public Praia() {
     }
 
@@ -59,18 +55,5 @@ public class Praia implements Serializable {
         this.capacidade = capacidade;
         this.nome = nome;
         this.endereco = endereco;
-    }
-
-    public void adicionarPessoa() throws Exception {
-        if (getCapacidade() > 0) {
-            capacidade = capacidade - 1;
-        } else {
-            throw new Exception("Praia com capacidade máxima atingida");
-        }
-
-    }
-
-    public void removerPessoa() {
-        capacidade = capacidade + 1;        
     }
 }

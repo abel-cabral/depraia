@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uff.dac.depraia.apidepraia.dto.EsportistaDTO;
 import uff.dac.depraia.apidepraia.model.Esportista;
+import uff.dac.depraia.apidepraia.repositories.AgendaRepository;
 import uff.dac.depraia.apidepraia.repositories.EsportistaRepository;
-import uff.dac.depraia.apidepraia.repositories.PraiaRepository;
 import uff.dac.depraia.apidepraia.util.Mensagem;
 
 @Controller
@@ -28,14 +28,14 @@ public class EsportistaController {
     @Autowired
     private EsportistaRepository esportistaRepo;
     @Autowired
-    private PraiaRepository praiaRepo;
+    private AgendaRepository agendaRepo;
 
     @PostMapping(path = "")
     public @ResponseBody
-    Map<String, Boolean> addEntity(@NotNull @Valid @RequestBody EsportistaDTO entity) {
+    Map<String, Boolean> addEntity(@NotNull @Valid @RequestBody EsportistaDTO entity) {        
         try {
-            // Busca a praia pelo ID
-            return praiaRepo.findById(entity.getPraia().getId())
+            // Busca agenda pelo ID
+            return agendaRepo.findById(entity.getAgenda().getId())
                     .map(n -> {
                         // Preparar                        
                         Esportista aux = entity.conversor(n);
@@ -43,16 +43,16 @@ public class EsportistaController {
                         // Verifica se há vagas
                         try {
                             n.adicionarPessoa();
-                        } catch (Exception ex) {
+                       } catch (Exception ex) {
                             return Mensagem.error(ex.getMessage(), 5);
-                        }
+                       }
 
                         // Salvar                   
                         esportistaRepo.save(aux);
                         return Mensagem.sucesso(aux.getClass().getSimpleName(), 1);
                     })
                     .orElseGet(() -> {
-                        return Mensagem.error("Praia", 4);
+                        return Mensagem.error("Agenda", 4);
                     });
         } catch (NullPointerException e) {
             return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
@@ -75,8 +75,8 @@ public class EsportistaController {
     public @ResponseBody
     Map<String, Boolean> updateById(@NotNull @Valid @RequestBody EsportistaDTO entity, @PathVariable int id) {
         try {
-            // Busca se o id da praia é valido                                
-            return praiaRepo.findById(entity.getPraia().getId()).map(n -> {
+            // Busca agenda pelo ID                                
+            return agendaRepo.findById(entity.getAgenda().getId()).map(n -> {
                 // Busca no banco de dados
                 return esportistaRepo.findById(id)
                         .map(m -> {
@@ -91,15 +91,15 @@ public class EsportistaController {
                             m.getUser().getEndereco().setCep(entity.getUser().getEndereco().getCep());
                             m.getUser().getEndereco().setCidade(entity.getUser().getEndereco().getCidade());
 
-                            // Verifica se há vaga na praia e entao faz as operacoes de acrescentar e decrementar                           
+                            // Verifica se há vaga na agenda e entao faz as operacoes de acrescentar e decrementar                           
                             try {
-                                // Verifica se a nova praia tem lugar
+                                // Verifica se a nova agenda tem lugar
                                 n.adicionarPessoa();
-                                // Libera vaga na praia antiga e a salva
-                                m.getPraia().removerPessoa();
-                                praiaRepo.save(m.getPraia());
-                                // Salva a vaga nova praia
-                                m.setPraia(n);                                
+                                // Libera vaga na agenda antiga e a salva
+                                m.getAgenda().removerPessoa();
+                                agendaRepo.save(m.getAgenda());
+                                // Salva a vaga nova agenda
+                                m.setAgenda(n);                                
                                 esportistaRepo.save(m);
                                 return Mensagem.sucesso(m.getClass().getSimpleName(), 2);                                
                             } catch (Exception ex) {                                
@@ -111,7 +111,7 @@ public class EsportistaController {
                         });
             })
                     .orElseGet(() -> {
-                        return Mensagem.error("Praia", 4);
+                        return Mensagem.error("Agenda", 4);
                     });
         } catch (NullPointerException e) {
             return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
@@ -124,19 +124,19 @@ public class EsportistaController {
     public @ResponseBody
     Map<String, Boolean> deleteById(@NotNull @Valid @RequestBody EsportistaDTO entity, @PathVariable int id) {
         try {
-            // Busca se o id da praia é valido                                
-            return praiaRepo.findById(entity.getPraia().getId()).map(n -> {
+            // Busca agenda pelo ID                               
+            return agendaRepo.findById(entity.getAgenda().getId()).map(n -> {
                 // Busca no banco de dados
                 return esportistaRepo.findById(id)
                         .map(m -> {
-                            // Verifica se o usuario está incluido na praia informada
-                            if(!Objects.equals(n.getId(), m.getPraia().getId())) {
-                                return Mensagem.error(entity.getClass().getSimpleName() + " não está cadastrado na praia informada", 5);
+                            // Verifica se o usuario está incluido na agenda informada
+                            if(!Objects.equals(n.getId(), m.getAgenda().getId())) {
+                                return Mensagem.error(entity.getClass().getSimpleName() + " não está cadastrado na agenda informada", 5);
                             }
                             // Libera Vaga
-                            m.setPraia(n);
+                            m.setAgenda(n);
                             try {                                                                
-                                m.getPraia().removerPessoa();                                
+                                m.getAgenda().removerPessoa();                                
                             } catch (Exception ex) {                                
                                 return Mensagem.error(ex.getMessage(), 5);
                             }
@@ -150,7 +150,7 @@ public class EsportistaController {
                         });
             })
                     .orElseGet(() -> {
-                        return Mensagem.error("Praia", 4);
+                        return Mensagem.error("Agenda", 4);
                     });
         } catch (NullPointerException e) {
             return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);

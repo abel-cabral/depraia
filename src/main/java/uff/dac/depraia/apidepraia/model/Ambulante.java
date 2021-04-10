@@ -26,10 +26,7 @@ public class Ambulante implements Serializable {
     private Integer id;
     @OneToOne(cascade = CascadeType.PERSIST)
     private User user;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="vendedor_venda", 
-                joinColumns={@JoinColumn(name="ambulante_id")}, 
-                inverseJoinColumns={@JoinColumn(name="produto_id")})
+    @ManyToMany(cascade = CascadeType.ALL)    
     private Set<Produto> produtos;
 
     public Ambulante() {

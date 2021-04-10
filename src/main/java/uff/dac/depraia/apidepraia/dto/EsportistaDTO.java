@@ -2,18 +2,24 @@ package uff.dac.depraia.apidepraia.dto;
 
 import lombok.Getter;
 import uff.dac.depraia.apidepraia.model.Esportista;
-import uff.dac.depraia.apidepraia.model.Praia;
+import uff.dac.depraia.apidepraia.model.Agenda;
 
 @Getter
 public class EsportistaDTO {
     private Integer tipoUsuario;    
     private UserDTO user;
-    private PraiaIdDTO praia;
+    private AgendaIdDTO agenda;
 
     public EsportistaDTO() {
     }
+    
+    public EsportistaDTO(Esportista n) {
+        this.tipoUsuario = n.getTipoUsuario();
+        this.user = new UserDTO(n.getUser());
+        this.agenda = new AgendaIdDTO(n.getAgenda());
+    }
             
-    public Esportista conversor(Praia p) {
-        return new Esportista(tipoUsuario, praia.conversor(p), user.conversor());
+    public Esportista conversor(Agenda n) {
+        return new Esportista(tipoUsuario, user.conversor(), n);
     }
 }
