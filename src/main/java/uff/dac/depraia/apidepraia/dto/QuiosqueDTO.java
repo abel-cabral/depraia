@@ -7,17 +7,17 @@ import uff.dac.depraia.apidepraia.model.Quiosque;
 @Getter
 public class QuiosqueDTO {
     private String nome;
-    private Praia praia;
+    private PraiaIdDTO praia;
 
     public QuiosqueDTO() {
     }
     
-    public QuiosqueDTO(String nome, Praia praia) {
+    public QuiosqueDTO(String nome, PraiaIdDTO praia) {
         this.nome = nome;
         this.praia = praia;
     }
     
-    public Quiosque conversor() {
-        return new Quiosque(nome, praia);
+    public Quiosque conversor(Praia p) {
+        return new Quiosque(nome, p);
     }
 }

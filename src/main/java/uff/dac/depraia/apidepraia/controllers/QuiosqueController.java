@@ -1,8 +1,10 @@
 package uff.dac.depraia.apidepraia.controllers;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uff.dac.depraia.apidepraia.dto.QuiosqueDTO;
 import uff.dac.depraia.apidepraia.model.Quiosque;
-import uff.dac.depraia.apidepraia.repositories.QuiosqueRepository;
 import uff.dac.depraia.apidepraia.repositories.PraiaRepository;
+import uff.dac.depraia.apidepraia.repositories.QuiosqueRepository;
 import uff.dac.depraia.apidepraia.util.Mensagem;
 
 @Controller
@@ -30,18 +32,23 @@ public class QuiosqueController {
 
     @PostMapping(path = "")
     public @ResponseBody
-    Map<String, Boolean> addEntity(@Valid @RequestBody QuiosqueDTO entity) {
-        // Busca a praia pelo ID
-        return praiaRepo.findById(entity.getPraia().getId())
-                .map(n -> {
-                    Quiosque aux = entity.conversor();
-                    aux.setPraia(n);
-                    quiosqueRepo.save(aux);
-                    return Mensagem.sucesso(entity.conversor().getClass().getSimpleName(), 1);
-                })
-                .orElseGet(() -> {
-                    return Mensagem.error("Praia", 4);
-                });
+    Map<String, Boolean> addEntity(@NotNull @Valid @RequestBody QuiosqueDTO entity) {        
+        try {
+            // Busca praia pelo ID
+            return praiaRepo.findById(entity.getPraia().getId())
+                    .map(n -> {
+                        // Preparar                        
+                        Quiosque aux = entity.conversor(n);                      
+                        // Salvar                   
+                        quiosqueRepo.save(aux);
+                        return Mensagem.sucesso(aux.getClass().getSimpleName(), 1);
+                    })
+                    .orElseGet(() -> {
+                        return Mensagem.error("Praia", 4);
+                    });
+        } catch (NullPointerException e) {
+            return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
+        }
     }
 
     @GetMapping(path = "/todos")
@@ -58,34 +65,62 @@ public class QuiosqueController {
 
     @PutMapping("/{id}")
     public @ResponseBody
-    Map<String, Boolean> updateById(@Valid @RequestBody QuiosqueDTO entity, @PathVariable int id) {
-        // Busca se o id da praia é valido                                
-        return praiaRepo.findById(entity.getPraia().getId()).map(n -> {
-            // Busca o quiosque no banco de dados
-            return quiosqueRepo.findById(id)
-                    .map(m -> {
-                        m.setNome(entity.getNome());
-                        m.setPraia(n);
-                        quiosqueRepo.save(m);
-                        return Mensagem.sucesso(entity.conversor().getClass().getSimpleName(), 2);
-                    })
+    Map<String, Boolean> updateById(@NotNull @Valid @RequestBody QuiosqueDTO entity, @PathVariable int id) {
+        try {
+            // Busca praia pelo ID                                
+            return praiaRepo.findById(entity.getPraia().getId()).map(n -> {
+                // Busca no banco de dados
+                return quiosqueRepo.findById(id)
+                        .map(m -> {
+                            // Preparar 
+                            m.setNome(entity.getNome());
+                            m.setPraia(n);
+                            // Salvar                   
+                            quiosqueRepo.save(m);
+                            return Mensagem.sucesso(m.getClass().getSimpleName(), 2);
+                        })
+                        .orElseGet(() -> {
+                            return Mensagem.error("Quiosque", 4);
+                        });
+            })
                     .orElseGet(() -> {
-                        return Mensagem.error("Quiosque", 4);
+                        return Mensagem.error("Praia", 4);
                     });
-        })
-                .orElseGet(() -> {
-                    return Mensagem.error("Praia", 4);
-                });
+        } catch (NullPointerException e) {
+            return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
+        } catch (Exception e) {
+            return Mensagem.error(e.getMessage(), 5);
+        }
     }
 
     @DeleteMapping("/{id}")
     public @ResponseBody
-    Map<String, Boolean> deleteById(@PathVariable int id) {
+    Map<String, Boolean> deleteById(@NotNull @Valid @RequestBody QuiosqueDTO entity, @PathVariable int id) {
         try {
-            quiosqueRepo.deleteById(id);
-            return Mensagem.sucesso("Quiosque", 3);
+            // Busca praia pelo ID                               
+            return praiaRepo.findById(entity.getPraia().getId()).map(n -> {
+                // Busca no banco de dados
+                return quiosqueRepo.findById(id)
+                        .map(m -> {
+                            // Verifica se o usuario está incluido na praia informada
+                            if(!Objects.equals(n.getId(), m.getPraia().getId())) {
+                                return Mensagem.error(entity.getClass().getSimpleName() + " não está cadastrado na praia informada", 5);
+                            }                          
+                            // Salvar                        
+                            quiosqueRepo.delete(m);
+                            return Mensagem.sucesso(m.getClass().getSimpleName(), 3);
+                        })
+                        .orElseGet(() -> {
+                            return Mensagem.error("Quiosque", 4);
+                        });
+            })
+                    .orElseGet(() -> {
+                        return Mensagem.error("Praia", 4);
+                    });
+        } catch (NullPointerException e) {
+            return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
         } catch (Exception e) {
-            return Mensagem.error("Quiosque", 3);
+            return Mensagem.error(e.getMessage(), 5);
         }
     }
 }

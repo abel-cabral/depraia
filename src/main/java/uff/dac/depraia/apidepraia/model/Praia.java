@@ -1,12 +1,9 @@
 package uff.dac.depraia.apidepraia.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -35,7 +32,7 @@ public class Praia implements Serializable {
     @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
             cascade = {CascadeType.ALL})
     private Set<Agenda> agendas;
-
+    
     @JsonManagedReference
     @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
             cascade = {CascadeType.ALL})
