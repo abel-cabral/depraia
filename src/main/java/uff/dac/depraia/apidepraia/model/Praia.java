@@ -22,7 +22,6 @@ public class Praia implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    private Integer capacidade;
     private String nome;
 
     @OneToOne(cascade = CascadeType.PERSIST)
@@ -46,15 +45,13 @@ public class Praia implements Serializable {
     public Praia() {
     }
 
-    public Praia(Integer capacidade, String nome, Endereco endereco) {
-        this.capacidade = capacidade;
+    public Praia(String nome, Endereco endereco) {
         this.nome = nome;
         this.endereco = endereco;
     }
 
-    public Praia(Integer capacidade, Integer id, String nome, Endereco endereco) {
+    public Praia(Integer id, String nome, Endereco endereco) {
         this.id = id;
-        this.capacidade = capacidade;
         this.nome = nome;
         this.endereco = endereco;
     }

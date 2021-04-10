@@ -14,6 +14,6 @@ public class AgendaDTO {
     
     public Agenda conversor(Praia p) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        return new Agenda(p, sdf.parse(data));
+        return new Agenda(p, sdf.parse(data), vagas);
     }
 }

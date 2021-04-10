@@ -47,10 +47,10 @@ public class Agenda implements Serializable {
 
     public Agenda () {}
     
-    public Agenda(Praia praia, Date data) {
+    public Agenda(Praia praia, Date data, Integer vagas) {
         this.praia = praia;
         this.data = data;
-        this.vagas = praia.getCapacidade();
+        this.vagas = vagas;
     }
     
     public void adicionarPessoa() throws Exception {

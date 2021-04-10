@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uff.dac.depraia.apidepraia.dto.AmbulanteDTO;
+import uff.dac.depraia.apidepraia.dto.ProdutoIdDTO;
 import uff.dac.depraia.apidepraia.model.Ambulante;
+import uff.dac.depraia.apidepraia.model.Produto;
 import uff.dac.depraia.apidepraia.repositories.PraiaRepository;
 import uff.dac.depraia.apidepraia.repositories.AmbulanteRepository;
+import uff.dac.depraia.apidepraia.repositories.ProdutoRepository;
 import uff.dac.depraia.apidepraia.util.Mensagem;
 
 @Controller
@@ -29,6 +32,8 @@ public class AmbulanteController {
     private AmbulanteRepository ambulanteRepo;
     @Autowired
     private PraiaRepository praiaRepo;
+    @Autowired
+    private ProdutoRepository produtoRepo;
 
     @PostMapping(path = "")
     public @ResponseBody
@@ -49,6 +54,36 @@ public class AmbulanteController {
                     });
         } catch (NullPointerException e) {
             return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
+        }
+    }
+    
+    @PostMapping(path = "/adicionar/produto/{id}")
+    public @ResponseBody
+    Map<String, Boolean> addProduto(@NotNull @Valid @RequestBody ProdutoIdDTO entity, @PathVariable int id) {        
+        try {
+            // Busca produto pelo ID                                
+            return produtoRepo.findById(entity.getId()).map(n -> {
+                // Busca no banco de dados
+                return ambulanteRepo.findById(id)
+                        .map(m -> {
+                            // Preparar                             
+                            m.getProdutos().add(n);
+
+                            // Salva                                                           
+                            ambulanteRepo.save(m);
+                            return Mensagem.sucesso(m.getClass().getSimpleName(), 2);                 
+                        })
+                        .orElseGet(() -> {
+                            return Mensagem.error("Ambulante", 4);
+                        });
+            })
+                    .orElseGet(() -> {
+                        return Mensagem.error("Praia", 4);
+                    });
+        } catch (NullPointerException e) {
+            return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
+        } catch (Exception e) {
+            return Mensagem.error(e.getMessage(), 5);
         }
     }
 
@@ -129,6 +164,57 @@ public class AmbulanteController {
                     });
         } catch (NullPointerException e) {
             return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
+        } catch (Exception e) {
+            return Mensagem.error(e.getMessage(), 5);
+        }
+    }
+    
+    @DeleteMapping(path = "/remover/produto/{id}")
+    public @ResponseBody
+    Map<String, Boolean> deleteProduto(@NotNull @Valid @RequestBody ProdutoIdDTO entity, @PathVariable int id) {        
+        try {
+            // Busca produto pelo ID                                
+            return produtoRepo.findById(entity.getId()).map(n -> {
+                // Busca no banco de dados
+                return ambulanteRepo.findById(id)
+                        .map(m -> {
+                            // Preparar                             
+                            m.getProdutos().remove(n);
+
+                            // Salva                                                           
+                            ambulanteRepo.save(m);
+                            return Mensagem.sucesso(m.getClass().getSimpleName(), 2);                 
+                        })
+                        .orElseGet(() -> {
+                            return Mensagem.error("Ambulante", 4);
+                        });
+            })
+                    .orElseGet(() -> {
+                        return Mensagem.error("Praia", 4);
+                    });
+        } catch (NullPointerException e) {
+            return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
+        } catch (Exception e) {
+            return Mensagem.error(e.getMessage(), 5);
+        }
+    }
+    
+    @DeleteMapping("/remover/produto/todos")
+    public @ResponseBody
+    Map<String, Boolean> deleteById(@NotNull @Valid @RequestBody @PathVariable int id) {
+        try {          
+                // Busca no banco de dados
+                return ambulanteRepo.findById(id)
+                        .map(m -> {
+                            // Preparar
+                            m.getProdutos().clear();
+                            // Salvar
+                            ambulanteRepo.delete(m);
+                            return Mensagem.sucesso("Todos os produtos removidos", 5);
+                        })
+                        .orElseGet(() -> {
+                            return Mensagem.error("Ambulante", 4);
+                        });            
         } catch (Exception e) {
             return Mensagem.error(e.getMessage(), 5);
         }

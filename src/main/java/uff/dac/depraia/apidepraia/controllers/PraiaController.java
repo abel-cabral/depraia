@@ -4,7 +4,6 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uff.dac.depraia.apidepraia.dto.PraiaDTO;
-import uff.dac.depraia.apidepraia.dto.UserDTO;
 import uff.dac.depraia.apidepraia.model.Praia;
-import uff.dac.depraia.apidepraia.repositories.BanhistaRepository;
 import uff.dac.depraia.apidepraia.repositories.PraiaRepository;
 
 @Controller
@@ -59,8 +56,7 @@ public class PraiaController {
         try {
             return praiaRepo.findById(id)
                     .map(n -> {
-                        n.setNome(newPraia.conversor().getNome());
-                        n.setCapacidade(newPraia.conversor().getCapacidade());
+                        n.setNome(newPraia.conversor().getNome());                        
                         n.getEndereco().setBairro(newPraia.conversor().getEndereco().getBairro());
                         n.getEndereco().setRua(newPraia.conversor().getEndereco().getRua());
                         n.getEndereco().setCidade(newPraia.conversor().getEndereco().getCidade());
