@@ -14,12 +14,11 @@ public class EsportistaDTO {
     }
     
     public EsportistaDTO(Esportista n) {
-        this.tipoUsuario = n.getTipoUsuario();
         this.user = new UserDTO(n.getUser());
         this.agenda = new AgendaIdDTO(n.getAgenda());
     }
             
     public Esportista conversor(Agenda n) {
-        return new Esportista(tipoUsuario, user.conversor(), n);
+        return new Esportista(user.conversor(), n);
     }
 }

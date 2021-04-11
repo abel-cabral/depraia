@@ -22,8 +22,6 @@ public class Esportista implements Serializable{
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     
-    private Integer tipoUsuario;
-    
     @OneToOne(cascade=CascadeType.PERSIST)
     private User user;
     
@@ -34,8 +32,7 @@ public class Esportista implements Serializable{
     
     public Esportista() {}
 
-    public Esportista(Integer tipoUsuario, User user, Agenda agenda) {
-        this.tipoUsuario = tipoUsuario;
+    public Esportista(User user, Agenda agenda) {        
         this.user = user;
         this.agenda = agenda;
     }

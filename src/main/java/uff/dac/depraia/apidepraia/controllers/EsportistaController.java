@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import uff.dac.depraia.apidepraia.dto.CadastroDTO;
 import uff.dac.depraia.apidepraia.dto.EsportistaDTO;
 import uff.dac.depraia.apidepraia.model.Esportista;
 import uff.dac.depraia.apidepraia.repositories.AgendaRepository;
@@ -32,13 +33,13 @@ public class EsportistaController {
 
     @PostMapping(path = "")
     public @ResponseBody
-    Map<String, Boolean> addEntity(@NotNull @Valid @RequestBody EsportistaDTO entity) {        
+    Map<String, Boolean> addEntity(@NotNull @Valid @RequestBody CadastroDTO entity) {        
         try {
             // Busca agenda pelo ID
             return agendaRepo.findById(entity.getAgenda().getId())
                     .map(n -> {
                         // Preparar                        
-                        Esportista aux = entity.conversor(n);
+                        Esportista aux = entity.conversorEsportista(n);
 
                         // Verifica se há vagas
                         try {
@@ -81,11 +82,10 @@ public class EsportistaController {
                 return esportistaRepo.findById(id)
                         .map(m -> {
                             // Preparar 
-                            m.setTipoUsuario(entity.getTipoUsuario());
+                            m.getUser().setTipoUsuario(entity.getUser().getTipoUsuario());
                             m.getUser().setNome(entity.getUser().getNome());
                             m.getUser().setCpf(entity.getUser().getCpf());
                             m.getUser().setEmail(entity.getUser().getEmail());
-                            m.getUser().setAdmin(entity.getUser().getAdmin());
                             m.getUser().getEndereco().setRua(entity.getUser().getEndereco().getRua());
                             m.getUser().getEndereco().setBairro(entity.getUser().getEndereco().getBairro());
                             m.getUser().getEndereco().setCep(entity.getUser().getEndereco().getCep());

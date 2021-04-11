@@ -22,8 +22,6 @@ public class Banhista implements Serializable{
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     
-    private Integer tipoUsuario;
-    
     @OneToOne(cascade=CascadeType.PERSIST)
     private User user;
     
@@ -34,8 +32,7 @@ public class Banhista implements Serializable{
     
     public Banhista() {}
 
-    public Banhista(Integer tipoUsuario, User user, Agenda agenda) {
-        this.tipoUsuario = tipoUsuario;
+    public Banhista(User user, Agenda agenda) {
         this.user = user;
         this.agenda = agenda;
     }

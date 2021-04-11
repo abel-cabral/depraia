@@ -2,6 +2,7 @@ package uff.dac.depraia.apidepraia.model;
 
 import java.io.Serializable;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,32 +18,34 @@ public class User implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-    //@NotBlank(message = "O campo 'nome' é obrigatório")
-    private String nome;
-    //@NotBlank(message = "O campo cpf' é obrigatório")
+    private Integer id;    
+    private String nome;    
     private String cpf;
     
     @OneToOne(cascade = CascadeType.PERSIST)
-    private Endereco endereco;
-    //@NotBlank(message = "O campo 'email' é obrigatório")
-    private String email;    
-    private Boolean admin;
+    private Endereco endereco;    
+    private String email;
+    private String senha;
+        
+    private Boolean admin = false;
+    private Integer tipoUsuario; 
     
     public User() {}
-    
-    public User(String nome, Endereco endereco, String email, Boolean admin) {
-        this.nome = nome;
-        this.endereco = endereco;
-        this.email = email;
-        this.admin = admin;
-    }
-    
-    public User(String nome, String cpf, Endereco endereco, String email, Boolean admin) {
+            
+    public User(String nome, String cpf, Endereco endereco, String email, Integer tipoUsuario) {
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;
         this.email = email;
-        this.admin = admin;
+        this.tipoUsuario = tipoUsuario;
+    }
+    
+    public User(String nome, String cpf, Endereco endereco, String email, Integer tipoUsuario, String senha) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.endereco = endereco;
+        this.email = email;
+        this.tipoUsuario = tipoUsuario;
+        this.senha = senha;
     }
 }
