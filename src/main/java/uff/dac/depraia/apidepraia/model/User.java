@@ -1,12 +1,16 @@
 package uff.dac.depraia.apidepraia.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +21,7 @@ import lombok.Setter;
 public class User implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;    
     private String nome;    
     private String cpf;
@@ -28,7 +32,11 @@ public class User implements Serializable{
     private String senha;
         
     private Boolean admin = false;
-    private Integer tipoUsuario; 
+    private Integer tipoUsuario;
+    
+    @JsonBackReference
+    @ManyToMany(mappedBy = "usuarios")
+    private Set<Agenda> agendas;
     
     public User() {}
             

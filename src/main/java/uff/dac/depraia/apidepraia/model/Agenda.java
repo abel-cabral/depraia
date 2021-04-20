@@ -5,15 +5,15 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,28 +31,26 @@ public class Agenda implements Serializable {
     private Integer vagas;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "agenda", fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL})
-    private Set<Esportista> esportistas;
-    
-    @JsonManagedReference
-    @OneToMany(mappedBy = "agenda", fetch = FetchType.LAZY,
-            cascade = {CascadeType.ALL})
-    private Set<Banhista> banhistas;
+    @ManyToMany
+    @JoinTable(name = "agenda_user", joinColumns = {
+        @JoinColumn(name = "agenda_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "user_id")})
+    private Set<User> usuarios;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "praia_id", nullable = false)    
+    @JoinColumn(name = "praia_id", nullable = false)
     private Praia praia;
 
-    public Agenda () {}
-    
+    public Agenda() {
+    }
+
     public Agenda(Praia praia, Date data, Integer vagas) {
         this.praia = praia;
         this.data = data;
         this.vagas = vagas;
     }
-    
+
     public void adicionarPessoa() throws Exception {
         if (vagas > 0) {
             vagas = vagas - 1;
@@ -62,6 +60,6 @@ public class Agenda implements Serializable {
     }
 
     public void removerPessoa() {
-        vagas = vagas + 1;        
+        vagas = vagas + 1;
     }
 }

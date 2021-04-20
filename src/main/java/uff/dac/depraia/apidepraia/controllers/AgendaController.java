@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uff.dac.depraia.apidepraia.dto.AgendaDTO;
+import uff.dac.depraia.apidepraia.dto.SimplesUsuarioDTO;
 import uff.dac.depraia.apidepraia.repositories.AgendaRepository;
 import uff.dac.depraia.apidepraia.repositories.PraiaRepository;
 import uff.dac.depraia.apidepraia.util.Mensagem;
 import uff.dac.depraia.apidepraia.model.Agenda;
+import uff.dac.depraia.apidepraia.repositories.LoginRepository;
 
 @Controller
 @RequestMapping("/agenda")
@@ -28,10 +30,12 @@ public class AgendaController {
     private AgendaRepository agendaRepo;
     @Autowired
     private PraiaRepository praiaRepo;
+    @Autowired
+    private LoginRepository loginRepo;
 
     @PostMapping(path = "")
     public @ResponseBody
-    Map<String, Boolean> addEntity(@NotNull @Valid @RequestBody AgendaDTO entity) {
+    Map<String, Boolean> cadastrarAgenda(@NotNull @Valid @RequestBody AgendaDTO entity) {
         try {
             // Busca a praia pelo ID
             return praiaRepo.findById(entity.getPraia().getId())
@@ -58,19 +62,19 @@ public class AgendaController {
 
     @GetMapping(path = "/todos")
     public @ResponseBody
-    Iterable<Agenda> getAll() {
+    Iterable<Agenda> verAgendas() {
         return agendaRepo.findAll();
     }
 
     @GetMapping(path = "/{id}")
     public @ResponseBody
-    Optional<Agenda> getById(@PathVariable int id) {
+    Optional<Agenda> verAgenda(@PathVariable int id) {
         return agendaRepo.findById(id);
     }
 
     @PutMapping("/{id}")
     public @ResponseBody
-    Map<String, Boolean> updateById(@NotNull @Valid @RequestBody AgendaDTO entity, @PathVariable int id) {
+    Map<String, Boolean> AtualizarAgenda(@NotNull @Valid @RequestBody AgendaDTO entity, @PathVariable int id) {
         try {
             // Busca praia pelo ID                                
             return praiaRepo.findById(entity.getPraia().getId()).map(n -> {
@@ -110,7 +114,7 @@ public class AgendaController {
 
     @DeleteMapping("/{id}")
     public @ResponseBody
-    Map<String, Boolean> deleteById(@NotNull @Valid @RequestBody @PathVariable int id) {
+    Map<String, Boolean> DeletarAgenda(@NotNull @Valid @RequestBody @PathVariable int id) {
         try {
             // Busca no banco de dados
             return agendaRepo.findById(id)
@@ -124,6 +128,72 @@ public class AgendaController {
                     });
         } catch (Exception e) {
             return Mensagem.error(e.getMessage(), 5);
+        }
+    }
+
+    @PutMapping(path = "/reservar")
+    public @ResponseBody
+    Map<String, Boolean> reservarVaga(@RequestBody SimplesUsuarioDTO entity) {
+        try {
+            //Busca pelo Usuario
+            return loginRepo.findById(entity.getUserId()).map(u -> {
+                // Busca agenda pelo ID
+                return agendaRepo.findById(entity.getAgendaId())
+                        .map(a -> {
+                            // Verifica se há vagas
+                            try {
+                                a.adicionarPessoa();
+                                a.getUsuarios().add(u);
+                            } catch (Exception ex) {
+                                return Mensagem.error(ex.getMessage(), 5);
+                            }
+
+                            // Salvar                   
+                            agendaRepo.save(a);                            
+                            return Mensagem.sucesso("A Reserva do usuário foi realizada", 5);
+                        })
+                        .orElseGet(() -> {
+                            return Mensagem.error("Agenda", 4);
+                        });
+            })
+                    .orElseGet(() -> {
+                        return Mensagem.error("Usuário", 4);
+                    });
+        } catch (NullPointerException e) {
+            return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
+        }
+    }
+    
+    @DeleteMapping(path = "/cancelar")
+    public @ResponseBody
+    Map<String, Boolean> cancelarVaga(@RequestBody SimplesUsuarioDTO entity) {
+        try {
+            //Busca pelo Usuario
+            return loginRepo.findById(entity.getUserId()).map(u -> {
+                // Busca agenda pelo ID
+                return agendaRepo.findById(entity.getAgendaId())
+                        .map(a -> {
+                            // Verifica se há vagas
+                            try {
+                                a.removerPessoa();
+                                a.getUsuarios().remove(u);
+                            } catch (Exception ex) {
+                                return Mensagem.error(ex.getMessage(), 5);
+                            }
+
+                            // Salvar                   
+                            agendaRepo.save(a);                            
+                            return Mensagem.sucesso("A Reserva do usuário foi cancelada", 5);
+                        })
+                        .orElseGet(() -> {
+                            return Mensagem.error("Agenda", 4);
+                        });
+            })
+                    .orElseGet(() -> {
+                        return Mensagem.error("Usuário", 4);
+                    });
+        } catch (NullPointerException e) {
+            return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
         }
     }
 }
