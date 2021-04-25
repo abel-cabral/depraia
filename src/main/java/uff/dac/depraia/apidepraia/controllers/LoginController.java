@@ -1,5 +1,6 @@
 package uff.dac.depraia.apidepraia.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +26,8 @@ public class LoginController {
 
     @Autowired
     private LoginRepository loginRepo;
-
+    
+    @ApiOperation(value = "Recebe os dados do usuario que pediu autenticação")
     @PostMapping(path = "/login")
     @ResponseBody
     ResponseEntity<UserDTO> fazerLogin(@NotNull @Valid @RequestBody LoginDTO entity) {
@@ -39,6 +41,7 @@ public class LoginController {
                 });
     }
 
+    @ApiOperation(value = "Cadastra um novo usuário no sistemas, banhista ou esportista. Use AMBULANTE_CONTROLLER para cadastrar um ambulante")
     @PostMapping(path = "/cadastro")
     @ResponseBody
     Map<String, Boolean> fazerCadastro(@NotNull @Valid @RequestBody UserDTO entity) {
@@ -47,6 +50,7 @@ public class LoginController {
         return Mensagem.sucesso(entity.getClass().getSimpleName(), 1);
     }
     
+    @ApiOperation(value = "Todos os usuários cadastrados: Esportista, banhista e ambulante")
     @GetMapping(path = "/todos")
     public @ResponseBody
     Iterable<UserDTO> getAll() {

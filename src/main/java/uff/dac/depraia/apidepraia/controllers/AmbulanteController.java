@@ -1,5 +1,6 @@
 package uff.dac.depraia.apidepraia.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,7 +20,6 @@ import uff.dac.depraia.apidepraia.dto.AmbulanteDTO;
 import uff.dac.depraia.apidepraia.dto.CadastroDTO;
 import uff.dac.depraia.apidepraia.dto.ProdutoIdDTO;
 import uff.dac.depraia.apidepraia.model.Ambulante;
-import uff.dac.depraia.apidepraia.model.Produto;
 import uff.dac.depraia.apidepraia.repositories.PraiaRepository;
 import uff.dac.depraia.apidepraia.repositories.AmbulanteRepository;
 import uff.dac.depraia.apidepraia.repositories.ProdutoRepository;
@@ -35,7 +35,8 @@ public class AmbulanteController {
     private PraiaRepository praiaRepo;
     @Autowired
     private ProdutoRepository produtoRepo;
-
+    
+    @ApiOperation(value = "Cadastra um ambulante")
     @PostMapping(path = "")
     public @ResponseBody
     Map<String, Boolean> addEntity(@NotNull @Valid @RequestBody CadastroDTO entity) {        
@@ -57,7 +58,8 @@ public class AmbulanteController {
             return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
         }
     }
-    
+        
+    @ApiOperation(value = "Adiciona um produto a lista de vendas do ambulante")
     @PostMapping(path = "/adicionar/produto/{id}")
     public @ResponseBody
     Map<String, Boolean> addProduto(@NotNull @Valid @RequestBody ProdutoIdDTO entity, @PathVariable int id) {        
@@ -88,18 +90,21 @@ public class AmbulanteController {
         }
     }
 
+    @ApiOperation(value = "Retorna um array com todos os ambulantes")
     @GetMapping(path = "/todos")
     public @ResponseBody
     Iterable<Ambulante> getAll() {
         return ambulanteRepo.findAll();
     }
 
+    @ApiOperation(value = "Retorna um ambulante")
     @GetMapping(path = "/{id}")
     public @ResponseBody
     Optional<Ambulante> getById(@PathVariable int id) {
         return ambulanteRepo.findById(id);
     }
 
+    @ApiOperation(value = "Atualiza dados de usuário do participante")
     @PutMapping("/{id}")
     public @ResponseBody
     Map<String, Boolean> updateById(@NotNull @Valid @RequestBody AmbulanteDTO entity, @PathVariable int id) {
@@ -137,12 +142,13 @@ public class AmbulanteController {
             return Mensagem.error(e.getMessage(), 5);
         }
     }
-
+    
+    @ApiOperation(value = "Deleta um ambulante pelo ID")
     @DeleteMapping("/{id}")
     public @ResponseBody
     Map<String, Boolean> deleteById(@NotNull @Valid @RequestBody AmbulanteDTO entity, @PathVariable int id) {
         try {
-            // Busca praia pelo ID                               
+            // Busca praia pelo ID                                
             return praiaRepo.findById(entity.getPraia().getId()).map(n -> {
                 // Busca no banco de dados
                 return ambulanteRepo.findById(id)
@@ -170,6 +176,7 @@ public class AmbulanteController {
         }
     }
     
+    @ApiOperation(value = "Remove um produto da lista do ambulante")
     @DeleteMapping(path = "/remover/produto/{id}")
     public @ResponseBody
     Map<String, Boolean> deleteProduto(@NotNull @Valid @RequestBody ProdutoIdDTO entity, @PathVariable int id) {        
@@ -199,7 +206,8 @@ public class AmbulanteController {
             return Mensagem.error(e.getMessage(), 5);
         }
     }
-    
+        
+    @ApiOperation(value = "Remove todos os produtos do ambulante")
     @DeleteMapping("/remover/produto/todos")
     public @ResponseBody
     Map<String, Boolean> deleteById(@NotNull @Valid @RequestBody @PathVariable int id) {

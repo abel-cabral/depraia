@@ -1,5 +1,6 @@
 package uff.dac.depraia.apidepraia.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,7 +30,8 @@ public class QuiosqueController {
     private QuiosqueRepository quiosqueRepo;
     @Autowired
     private PraiaRepository praiaRepo;
-
+    
+    @ApiOperation(value = "Adiciona 1 quiosque a uma praia")
     @PostMapping(path = "")
     public @ResponseBody
     Map<String, Boolean> addEntity(@NotNull @Valid @RequestBody QuiosqueDTO entity) {        
@@ -51,18 +53,21 @@ public class QuiosqueController {
         }
     }
 
+    @ApiOperation(value = "Lista todos os cadastrados")
     @GetMapping(path = "/todos")
     public @ResponseBody
     Iterable<Quiosque> getAll() {
         return quiosqueRepo.findAll();
     }
 
+    @ApiOperation(value = "Busca 1 quiosque por ID")
     @GetMapping(path = "/{id}")
     public @ResponseBody
     Optional<Quiosque> getById(@PathVariable int id) {
         return quiosqueRepo.findById(id);
     }
 
+    @ApiOperation(value = "Atualiza o nome de um quiosque")
     @PutMapping("/{id}")
     public @ResponseBody
     Map<String, Boolean> updateById(@NotNull @Valid @RequestBody QuiosqueDTO entity, @PathVariable int id) {
@@ -93,6 +98,7 @@ public class QuiosqueController {
         }
     }
 
+    @ApiOperation(value = "Deleta 1 quiosque de uma praia")
     @DeleteMapping("/{id}")
     public @ResponseBody
     Map<String, Boolean> deleteById(@NotNull @Valid @RequestBody QuiosqueDTO entity, @PathVariable int id) {

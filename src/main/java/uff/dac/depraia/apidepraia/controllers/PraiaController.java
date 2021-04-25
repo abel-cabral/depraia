@@ -1,5 +1,6 @@
 package uff.dac.depraia.apidepraia.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class PraiaController {
     @Autowired
     private PraiaRepository praiaRepo;    
 
+    @ApiOperation(value = "Cria uma nova praia")
     @PostMapping(path = "")
     public @ResponseBody
     String addNew(@Valid @RequestBody PraiaDTO praia) {
@@ -36,20 +38,21 @@ public class PraiaController {
         }
     }
     
-   
-    // ------------------------------------- QUIÓSQUE -------------------------------------------//
+    @ApiOperation(value = "Lista todas as praias cadastradas")
     @GetMapping(path = "/todos")
     public @ResponseBody
     Iterable<Praia> getAll() {
         return praiaRepo.findAll();
     }
 
+    @ApiOperation(value = "Busca uma  praia por ID")
     @GetMapping(path = "/{id}")
     public @ResponseBody
     Praia getById(@PathVariable int id) {
         return praiaRepo.findById(id).get();
     }
-
+    
+    @ApiOperation(value = "Atualia os dados de uma praia")
     @PutMapping("/{id}")
     public @ResponseBody
     Praia updateById(@RequestBody PraiaDTO newPraia, @PathVariable int id) {
@@ -70,8 +73,9 @@ public class PraiaController {
             return praiaRepo.save(newPraia.conversor());
         }
 
-    }
-
+    }   
+   
+    @ApiOperation(value = "Deleta uma praia por ID")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Integer> deleteById(@PathVariable int id) {
         try {

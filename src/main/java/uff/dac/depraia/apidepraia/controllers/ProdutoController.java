@@ -1,11 +1,11 @@
 package uff.dac.depraia.apidepraia.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +26,7 @@ public class ProdutoController {
     @Autowired
     private ProdutoRepository repo;
     
+    @ApiOperation(value = "Cadastra um novo produto a lista de produtos permitidos")
     @PostMapping(path = "")    
     public @ResponseBody
     String addNew(@Valid @RequestBody ProdutoDTO produto) {
@@ -38,18 +39,21 @@ public class ProdutoController {
         }        
     }
 
+    @ApiOperation(value = "Lista todos produtos cadastrados")
     @GetMapping(path = "/todos")
     public @ResponseBody
     Iterable<Produto> getAll() {
         return repo.findAll();
     }
 
+    @ApiOperation(value = "Retorna os dados de um produto com base no ID passado")
     @GetMapping(path = "/{id}")
     public @ResponseBody
     Optional<Produto> getById(@PathVariable int id) {
         return repo.findById(id);
     }
 
+    @ApiOperation(value = "Atualiza um produto já cadastrado")
     @PutMapping("/{id}")
     public @ResponseBody
     Produto updateById(@RequestBody Produto newProduto, @PathVariable int id) {
@@ -70,6 +74,7 @@ public class ProdutoController {
         
     }
 
+    @ApiOperation(value = "Deleta um produto cadastrado pelo ID")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Integer> deleteById(@PathVariable Integer id) {
         try {

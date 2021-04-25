@@ -1,5 +1,7 @@
 package uff.dac.depraia.apidepraia.controllers;
 
+import io.swagger.annotations.ApiOperation;
+import java.text.ParseException;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -32,7 +34,8 @@ public class AgendaController {
     private PraiaRepository praiaRepo;
     @Autowired
     private LoginRepository loginRepo;
-
+    
+    @ApiOperation(value = "Cria uma nova agenda para uma praia")
     @PostMapping(path = "")
     public @ResponseBody
     Map<String, Boolean> cadastrarAgenda(@NotNull @Valid @RequestBody AgendaDTO entity) {
@@ -44,7 +47,7 @@ public class AgendaController {
                         try {
                             // Preparar                        
                             aux = entity.conversor(n);
-                        } catch (Exception ex) {
+                        } catch (ParseException ex) {
                             return Mensagem.error(ex.getMessage(), 5);
                         }
 
@@ -59,19 +62,22 @@ public class AgendaController {
             return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);
         }
     }
-
+    
+    @ApiOperation(value = "Lista todas as agendas cadastradas")
     @GetMapping(path = "/todos")
     public @ResponseBody
     Iterable<Agenda> verAgendas() {
         return agendaRepo.findAll();
     }
 
+    @ApiOperation(value = "Busca uma agenda por ID")
     @GetMapping(path = "/{id}")
     public @ResponseBody
     Optional<Agenda> verAgenda(@PathVariable int id) {
         return agendaRepo.findById(id);
     }
-
+    
+    @ApiOperation(value = "Atualia os dados de uma agenda")
     @PutMapping("/{id}")
     public @ResponseBody
     Map<String, Boolean> AtualizarAgenda(@NotNull @Valid @RequestBody AgendaDTO entity, @PathVariable int id) {
@@ -111,7 +117,8 @@ public class AgendaController {
             return Mensagem.error(e.getMessage(), 5);
         }
     }
-
+    
+    @ApiOperation(value = "Deleta uma agenda por ID")
     @DeleteMapping("/{id}")
     public @ResponseBody
     Map<String, Boolean> DeletarAgenda(@NotNull @Valid @RequestBody @PathVariable int id) {
@@ -131,6 +138,7 @@ public class AgendaController {
         }
     }
 
+    @ApiOperation(value = "Reserva um lugar na praia para um usuarios, banhistas e esportistas")
     @PutMapping(path = "/reservar")
     public @ResponseBody
     Map<String, Boolean> reservarVaga(@RequestBody SimplesUsuarioDTO entity) {
@@ -164,6 +172,7 @@ public class AgendaController {
         }
     }
     
+    @ApiOperation(value = "Cancela um lugar na praia para um usuarios, banhistas e esportistas")
     @DeleteMapping(path = "/cancelar")
     public @ResponseBody
     Map<String, Boolean> cancelarVaga(@RequestBody SimplesUsuarioDTO entity) {
