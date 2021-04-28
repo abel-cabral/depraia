@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uff.dac.depraia.apidepraia.dto.LoginDTO;
 import uff.dac.depraia.apidepraia.dto.UserDTO;
+import uff.dac.depraia.apidepraia.dto.UserDTOSenha;
 import uff.dac.depraia.apidepraia.repositories.LoginRepository;
 import uff.dac.depraia.apidepraia.util.Mensagem;
 
@@ -44,7 +45,7 @@ public class LoginController {
     @ApiOperation(value = "Cadastra um novo usuário no sistemas, banhista ou esportista. Use AMBULANTE_CONTROLLER para cadastrar um ambulante")
     @PostMapping(path = "/cadastro")
     @ResponseBody
-    Map<String, Boolean> fazerCadastro(@NotNull @Valid @RequestBody UserDTO entity) {
+    Map<String, Boolean> fazerCadastro(@NotNull @Valid @RequestBody UserDTOSenha entity) {
         // Salvar                   
         loginRepo.save(entity.conversor());
         return Mensagem.sucesso(entity.getClass().getSimpleName(), 1);

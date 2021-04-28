@@ -4,19 +4,20 @@ import lombok.Getter;
 import uff.dac.depraia.apidepraia.model.User;
 
 @Getter
-public class UserDTO {
+public class UserDTOSenha {
     private Integer id;
     private String nome;    
     private String cpf;    
     private EnderecoDTO endereco;    
     private String email;    
     private Integer tipoUsuario;
-    private Boolean admin;    
+    private Boolean admin;
+    private String senha;
 
-    public UserDTO() {
+    public UserDTOSenha() {
     }
 
-    public UserDTO(User user) {
+    public UserDTOSenha(User user) {
         this.id = user.getId();
         this.admin = user.getAdmin();
         this.nome = user.getNome();
@@ -24,6 +25,7 @@ public class UserDTO {
         this.endereco = new EnderecoDTO(user.getEndereco());
         this.email = user.getEmail();
         this.tipoUsuario = user.getTipoUsuario();
+        this.senha =  user.getSenha();
     }
             
     public User conversor() {
