@@ -29,6 +29,6 @@ public class UserDTOSenha {
     }
             
     public User conversor() {
-        return new User(nome, cpf, endereco.conversor(), email, tipoUsuario);
+        return new User(nome, cpf, endereco.conversor(), email, tipoUsuario, senha);
     }
 }
