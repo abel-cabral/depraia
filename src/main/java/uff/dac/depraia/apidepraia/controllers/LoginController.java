@@ -3,6 +3,7 @@ package uff.dac.depraia.apidepraia.controllers;
 import io.swagger.annotations.ApiOperation;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -16,10 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import uff.dac.depraia.apidepraia.dto.AgendaDTO;
 import uff.dac.depraia.apidepraia.dto.LoginDTO;
 import uff.dac.depraia.apidepraia.dto.UserDTO;
 import uff.dac.depraia.apidepraia.dto.UserDTOSenha;
-import uff.dac.depraia.apidepraia.model.Agenda;
+import uff.dac.depraia.apidepraia.model.User;
 import uff.dac.depraia.apidepraia.repositories.LoginRepository;
 import uff.dac.depraia.apidepraia.util.Mensagem;
 
@@ -64,10 +66,14 @@ public class LoginController {
         return users;
     }
     
-    @ApiOperation(value = "Pelo Id do usuário busca as agendas que um usuário está/foi inscrito")
-    @GetMapping(path = "/{id}")
+    @ApiOperation(value = "Pelo Id, busca todas as agendas que um usuário esta/foi  inscrito")
+    @GetMapping(path = "/agendasUsuario/{id}")
     public @ResponseBody
-    Iterable<Agenda> usuarioAgendas(@PathVariable int id) {        
-        return loginRepo.findById(id).get().getAgendas();
+    Iterable<AgendaDTO> agendasUsuario(@PathVariable int id) {
+        Set<AgendaDTO> agendas = new HashSet<>();
+        loginRepo.findById(id).get().getAgendas().forEach(a -> {
+            agendas.add(new AgendaDTO(a));
+        });
+        return agendas;
     }
 }
