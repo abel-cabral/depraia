@@ -81,7 +81,7 @@ public class AmbulanteController {
                         });
             })
                     .orElseGet(() -> {
-                        return Mensagem.error("Praia", 4);
+                        return Mensagem.error("Produto", 4);
                     });
         } catch (NullPointerException e) {
             return Mensagem.error("Formato JSON inválido, verifique e tente novamente", 5);

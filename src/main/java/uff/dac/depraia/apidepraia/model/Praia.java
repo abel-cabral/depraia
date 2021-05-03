@@ -1,6 +1,9 @@
 package uff.dac.depraia.apidepraia.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -17,6 +20,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Praia implements Serializable {
 
     @Id
@@ -31,8 +35,8 @@ public class Praia implements Serializable {
     @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
             cascade = {CascadeType.ALL})
     private Set<Agenda> agendas;
-
-    @JsonManagedReference
+    
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(mappedBy = "praia", fetch = FetchType.LAZY,
             cascade = {CascadeType.ALL})
     private Set<Ambulante> ambulantes;

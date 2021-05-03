@@ -6,8 +6,7 @@ import uff.dac.depraia.apidepraia.model.Praia;
 
 @Getter
 public class CadastroDTO {   
-    private UserDTO user;
-    private AgendaIdDTO agenda;
+    private UserDTOSenha user;
     private PraiaIdDTO praia;
 
     public CadastroDTO() {
