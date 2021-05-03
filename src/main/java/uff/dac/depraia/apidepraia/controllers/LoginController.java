@@ -64,16 +64,10 @@ public class LoginController {
         return users;
     }
     
-    /*
-    @ApiOperation(value = "Todas as agendas que um usuário está incrito")
-    @GetMapping(value = "/{id}")
+    @ApiOperation(value = "Pelo Id do usuário busca as agendas que um usuário está/foi inscrito")
+    @GetMapping(path = "/{id}")
     public @ResponseBody
-    Iterable<Agenda> minhasAgendas(@PathVariable int id) {
-        Set<Agenda> agendas = new HashSet<>();
-        loginRepo.agendasUsuario(id).forEach(u -> {
-            agendas.add(u);
-        });
-        return agendas;
+    Iterable<Agenda> usuarioAgendas(@PathVariable int id) {        
+        return loginRepo.findById(id).get().getAgendas();
     }
-    */
 }

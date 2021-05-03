@@ -1,6 +1,9 @@
 package uff.dac.depraia.apidepraia.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -16,6 +19,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="id")
 public class User implements Serializable{
 
     @Id
@@ -32,7 +36,7 @@ public class User implements Serializable{
     private Boolean admin = false;
     private Integer tipoUsuario;
     
-    @JsonBackReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(mappedBy = "usuarios")
     private Set<Agenda> agendas;
     

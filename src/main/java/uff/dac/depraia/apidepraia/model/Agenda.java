@@ -1,7 +1,10 @@
 package uff.dac.depraia.apidepraia.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -21,6 +24,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="id")
 public class Agenda implements Serializable {
 
     @Id
@@ -30,7 +34,7 @@ public class Agenda implements Serializable {
     private Date data;
     private Integer vagas;
 
-    @JsonManagedReference
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany
     @JoinTable(name = "agenda_user", joinColumns = {
         @JoinColumn(name = "agenda_id")}, inverseJoinColumns = {
