@@ -1,9 +1,11 @@
 package uff.dac.depraia.apidepraia.controllers;
 
 import io.swagger.annotations.ApiOperation;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,8 +99,12 @@ public class AmbulanteController {
     @ApiOperation(value = "Retorna um array com todos os ambulantes")
     @GetMapping(path = "/todos")
     public @ResponseBody
-    Iterable<Ambulante> getAll() {
-        return ambulanteRepo.findAll();
+    Iterable<AmbulanteDTO> getAll() {
+        Set<AmbulanteDTO> aux = new HashSet<>();
+        ambulanteRepo.findAll().forEach(a -> {
+            aux.add(new AmbulanteDTO(a));
+        });
+        return aux;
     }
 
     @ApiOperation(value = "Passando um Id de usuario retorna um obj do tipo ambulante")
