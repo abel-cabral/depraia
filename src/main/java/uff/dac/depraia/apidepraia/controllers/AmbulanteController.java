@@ -20,8 +20,10 @@ import uff.dac.depraia.apidepraia.dto.AmbulanteDTO;
 import uff.dac.depraia.apidepraia.dto.CadastroDTO;
 import uff.dac.depraia.apidepraia.dto.ProdutoIdDTO;
 import uff.dac.depraia.apidepraia.model.Ambulante;
+import uff.dac.depraia.apidepraia.model.User;
 import uff.dac.depraia.apidepraia.repositories.PraiaRepository;
 import uff.dac.depraia.apidepraia.repositories.AmbulanteRepository;
+import uff.dac.depraia.apidepraia.repositories.LoginRepository;
 import uff.dac.depraia.apidepraia.repositories.ProdutoRepository;
 import uff.dac.depraia.apidepraia.util.Mensagem;
 
@@ -30,11 +32,13 @@ import uff.dac.depraia.apidepraia.util.Mensagem;
 public class AmbulanteController {
 
     @Autowired
-    private AmbulanteRepository ambulanteRepo;
+    private AmbulanteRepository ambulanteRepo;    
     @Autowired
-    private PraiaRepository praiaRepo;
+    private PraiaRepository praiaRepo;    
     @Autowired
     private ProdutoRepository produtoRepo;
+    @Autowired
+    private LoginRepository loginRepo;
     
     @ApiOperation(value = "Cadastra um ambulante")
     @PostMapping(path = "")
@@ -97,11 +101,12 @@ public class AmbulanteController {
         return ambulanteRepo.findAll();
     }
 
-    @ApiOperation(value = "Retorna um ambulante")
+    @ApiOperation(value = "Passando um Id de usuario retorna um obj do tipo ambulante")
     @GetMapping(path = "/{id}")
     public @ResponseBody
-    Optional<Ambulante> getById(@PathVariable int id) {
-        return ambulanteRepo.findById(id);
+    AmbulanteDTO getById(@PathVariable int id) {
+        Optional<User> user = loginRepo.findById(id);
+        return new AmbulanteDTO(ambulanteRepo.findByUserId(user.get()).get());
     }
 
     @ApiOperation(value = "Atualiza dados de usuário do participante")

@@ -3,7 +3,6 @@ package uff.dac.depraia.apidepraia.controllers;
 import io.swagger.annotations.ApiOperation;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -21,7 +20,6 @@ import uff.dac.depraia.apidepraia.dto.AgendaDTO;
 import uff.dac.depraia.apidepraia.dto.LoginDTO;
 import uff.dac.depraia.apidepraia.dto.UserDTO;
 import uff.dac.depraia.apidepraia.dto.UserDTOSenha;
-import uff.dac.depraia.apidepraia.model.User;
 import uff.dac.depraia.apidepraia.repositories.LoginRepository;
 import uff.dac.depraia.apidepraia.util.Mensagem;
 

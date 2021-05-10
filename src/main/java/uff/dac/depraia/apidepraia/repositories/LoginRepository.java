@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import uff.dac.depraia.apidepraia.model.User;
-import uff.dac.depraia.apidepraia.model.Agenda;
 
 public interface LoginRepository extends CrudRepository<User, Integer> {    
     @Query("SELECT u FROM User u WHERE u.email = :email AND u.senha = :senha") 

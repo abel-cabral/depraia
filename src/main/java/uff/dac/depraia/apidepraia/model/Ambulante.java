@@ -1,6 +1,5 @@
 package uff.dac.depraia.apidepraia.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -53,8 +52,15 @@ public class Ambulante implements Serializable {
     public Ambulante() {
     }
 
-    public Ambulante(User user, Praia praia) {
+    public Ambulante(User user, Praia praia) {        
         this.user = user;
         this.praia = praia;
+    }
+    
+    public Ambulante(Integer id, User user, Praia praia, Set<Produto> produtos) {
+        this.id = id;
+        this.user = user;
+        this.praia = praia;
+        this.produtos = produtos;
     }
 }
