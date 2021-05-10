@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import uff.dac.depraia.apidepraia.dto.AgendaDTO;
+import uff.dac.depraia.apidepraia.dto.AgendaIdNameDTO;
 import uff.dac.depraia.apidepraia.dto.LoginDTO;
 import uff.dac.depraia.apidepraia.dto.UserDTO;
 import uff.dac.depraia.apidepraia.dto.UserDTOSenha;
@@ -67,10 +68,10 @@ public class LoginController {
     @ApiOperation(value = "Pelo Id, busca todas as agendas que um usuário esta/foi  inscrito")
     @GetMapping(path = "/agendasUsuario/{id}")
     public @ResponseBody
-    Iterable<AgendaDTO> agendasUsuario(@PathVariable int id) {
-        Set<AgendaDTO> agendas = new HashSet<>();
+    Iterable<AgendaIdNameDTO> agendasUsuario(@PathVariable int id) {
+        Set<AgendaIdNameDTO> agendas = new HashSet<>();
         loginRepo.findById(id).get().getAgendas().forEach(a -> {
-            agendas.add(new AgendaDTO(a));
+            agendas.add(new AgendaIdNameDTO(a));
         });
         return agendas;
     }
