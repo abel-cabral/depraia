@@ -44,6 +44,15 @@ public class LoginControllerTest {
     String json = gson.toJson(user);
     
     @Test
+    void CreateUserTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/cadastro")
+                .content(json)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    
+    @Test
     void loginTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
                 .content(json)
@@ -52,7 +61,7 @@ public class LoginControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(user.getEmail()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.senha").doesNotHaveJsonPath());
-    }
+    }        
     
     @BeforeAll
     public static void setUpClass() {
