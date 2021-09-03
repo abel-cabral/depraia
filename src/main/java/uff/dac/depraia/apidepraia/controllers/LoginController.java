@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import uff.dac.depraia.apidepraia.dto.AgendaDTO;
 import uff.dac.depraia.apidepraia.dto.AgendaIdNameDTO;
 import uff.dac.depraia.apidepraia.dto.LoginDTO;
 import uff.dac.depraia.apidepraia.dto.UserDTO;
