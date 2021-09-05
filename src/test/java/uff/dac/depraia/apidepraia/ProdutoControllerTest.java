@@ -52,7 +52,7 @@ public class ProdutoControllerTest {
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     void buscarProdutoTest() throws Exception {
         Integer id = buscarDado().getId();
         mockMvc.perform(MockMvcRequestBuilders.get("/produto/{id}", id)
@@ -78,7 +78,7 @@ public class ProdutoControllerTest {
     }
      */
     @Test
-    @Order(4)
+    @Order(3)
     void deletarProdutoTest() throws Exception {
         Integer id = buscarDado().getId();
         mockMvc.perform(MockMvcRequestBuilders.delete("/produto/{id}", id)
