@@ -30,7 +30,7 @@ public class LoginControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private LoginRepository loginRepo;
+    private LoginRepository entityRepo;
 
     private final Endereco endereco = new Endereco("Rua X", "Bairro Y", "24210201", "Niterói");
     private final User user = new User("Abel Cabral Strondemberg", "731.886.080-12", endereco, "email@gmail.com", 2, "killer_queen");
@@ -73,7 +73,7 @@ public class LoginControllerTest {
     void criarUsuarioTest() throws Exception {
         // Busca o id do usuário e deleta;
         Integer id = buscarDados().getBody().getId();
-        loginRepo.deleteById(id);
+        entityRepo.deleteById(id);
         
         mockMvc.perform(MockMvcRequestBuilders.post("/cadastro")
                 .content(json)
@@ -83,7 +83,7 @@ public class LoginControllerTest {
     }
     
     private ResponseEntity<UserDTO> buscarDados() {        
-        return loginRepo.login(user.getEmail(), user.getSenha())
+        return entityRepo.login(user.getEmail(), user.getSenha())
                 .map(n -> {
                     return new ResponseEntity<>(new UserDTO(n), HttpStatus.OK);
                 })
