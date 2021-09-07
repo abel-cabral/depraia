@@ -55,6 +55,7 @@ public class ProdutoControllerTest {
                 .andExpect(status().isOk());
     }
 
+    /*
     @Test
     @Order(3)
     void atualizarProdutoTest() throws Exception {
@@ -73,7 +74,8 @@ public class ProdutoControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
-
+    */
+    
     @Test
     @Order(4)
     void deletarProdutoTest() throws Exception {        

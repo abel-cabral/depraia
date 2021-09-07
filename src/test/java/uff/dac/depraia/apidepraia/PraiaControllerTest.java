@@ -24,8 +24,7 @@ import uff.dac.depraia.apidepraia.model.Praia;
 public class PraiaControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
-        
+    private MockMvc mockMvc;        
     private final Gson gson = new Gson();    
 
     @Test

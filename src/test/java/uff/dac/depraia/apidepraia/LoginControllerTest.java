@@ -3,6 +3,7 @@ package uff.dac.depraia.apidepraia;
 import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 
@@ -28,18 +29,16 @@ import uff.dac.depraia.apidepraia.model.User;
 public class LoginControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
-
-    private final Endereco endereco = new Endereco("Rua X", "Bairro Y", "24210201", "Niterói");
-    private final User user = new User("Abel Cabral Strondemberg", "731.886.080-12", endereco, "email@gmail.com", 2, "killer_queen");
-    private final Gson gson = new Gson();
-    private final String json = gson.toJson(user);
+    private MockMvc mockMvc;   
+    private final Gson gson = new Gson();    
 
     @Test
     @Order(2)
     void autenticarTest() throws Exception {
+        Endereco endereco = new Endereco("Rua X", "Bairro Y", "24210201", "Niterói");
+        User user = new User("Abel Cabral Strondemberg", "731.886.080-12", endereco, "email@gmail.com", 2, "killer_queen");
         mockMvc.perform(MockMvcRequestBuilders.post("/login")
-                .content(json)
+                .content(gson.toJson(user))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -74,8 +73,10 @@ public class LoginControllerTest {
     @Test
     @Order(1)
     void criarUsuarioTest() throws Exception {
+        Endereco endereco = new Endereco("Rua X", "Bairro Y", "24210201", "Niterói");
+        User user = new User("Abel Cabral Strondemberg", "731.886.080-12", endereco, "email@gmail.com", 2, "killer_queen");
         mockMvc.perform(MockMvcRequestBuilders.post("/cadastro")
-                .content(json)
+                .content(gson.toJson(user))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
